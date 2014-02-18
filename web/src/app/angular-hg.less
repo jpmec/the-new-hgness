@@ -1,0 +1,45 @@
+@import "bootstrap.less";
+
+.angular-hg-filename {
+  font-family: @font-family-monospace;
+}
+
+
+.angular-hg-tag {
+  font-family: @font-family-monospace;
+}
+
+
+.angular-hg-status-clean {
+  &:extend(.text-info);
+}
+
+
+.angular-hg-status-modified {
+  &:extend(.text-primary);
+}
+
+
+.angular-hg-status-added {
+  &:extend(.text-success);
+}
+
+
+.angular-hg-status-removed {
+  &:extend(.text-warning);
+}
+
+
+.angular-hg-status-ignored {
+  &:extend(.text-muted);
+}
+
+
+.angular-hg-status-missing {
+  &:extend(.text-danger);
+}
+
+
+.angular-hg-status-untracked {
+  &:extend(.text-muted);
+}

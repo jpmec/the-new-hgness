@@ -1,0 +1,28 @@
+<div ng-controller="ReposCtrl">
+
+  <h1><i class="fa fa-archive fa-fw"></i> Repos</h1>
+  <hr>
+
+  <div class="row">
+    <div ng-repeat="repo in repos.value | orderBy:'log.date'">
+      <div class="col-md-4">
+          <h2><a ng-href="#/repo/{{repo.projectName}}" tooltip="{{repo.summary.branch}} {{repo.summary.parent}}"><i class="fa fa-folder fa-fw"></i> {{repo.projectName}}</a> </h2>
+
+          <div ng-repeat="log in repo.log">
+            <h4><a ng-href="#/diff/change/{{repo.projectName}}/{{log.changeset}}">{{prettyDate(log.date)}} by {{prettyName(log.user)}}</a></h4>
+            <pre>{{log.summary}}</pre>
+          </div>
+
+          <div class="alert alert-info" ng-show="repo.summary.commit != '(clean)'">
+              <p><b>Commit</b> {{repo.summary.commit}}</p>
+          </div>
+
+          <div class="alert alert-info" ng-show="repo.summary.update != '(current)'">
+              <p><b>Update</b> {{repo.summary.update}}</p>
+          </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

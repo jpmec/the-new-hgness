@@ -1,0 +1,11 @@
+syntax: glob
+
+.DS_Store
+composer.lock
+
+
+bower_modules/
+composer_modules/
+node_modules/
+
+web/dist/

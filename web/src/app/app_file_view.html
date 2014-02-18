@@ -1,0 +1,17 @@
+<div ng-controller="RepoCtrl" ng-cloak>
+
+  <h1><i class="fa fa-folder-open fa-fw"></i> {{repo.value.id}}</h1>
+  <hr>
+
+  <h2>Summary</h2>
+  <hg-summary summary="repo.value.summary"></hg-summary>
+
+
+  <h2>Status</h2>
+  <hg-status status="repo.value.status"></hg-status>
+
+
+  <h2>Logs</h2>
+  <pre>{{repo.value.logs}}</pre>
+
+</div>
