@@ -13,13 +13,17 @@ require 'Slim/Slim.php';
 $app = new \Slim\Slim();
 
 
+$app->config(array(
+    'root' => "/Users/Josh/Projects/"
+));
+
 
 
 $app->get(
     '/diff/change/:repo_id/:change',
     function ($repo_id, $change) use ($app) {
 
-    $root_dir = "/Users/Josh/Projects/";
+    $root_dir = $app->config('root');
 
     $dir = $root_dir . $repo_id;
 
@@ -47,7 +51,7 @@ $app->get(
     '/repos',
     function () use ($app) {
 
-    $root_dir = "/Users/Josh/Projects/";
+    $root_dir = $app->config('root');
 
 
     //$result = scandir($root_dir);
@@ -88,7 +92,7 @@ $app->get(
     '/repo/:repo_id',
     function ($repo_id) use ($app) {
 
-    $root_dir = "/Users/Josh/Projects/";
+    $root_dir = $app->config('root');
 
     $dir = $root_dir . $repo_id;
 
@@ -131,11 +135,15 @@ $app->get(
     $result = array(
         "id" => $repo_id,
         "branches" => $branches,
+        "branchesCount" => count($branches),
         "tags" => $tags,
+        "tagsCount" => count($tags),
         "summary" => $summary,
         "manifest" => $manifest,
         "status" => $status,
-        "log" => $log
+        "statusCount" => count($status),
+        "log" => $log,
+        "logCount" => count($log)
     );
 
     echo json_encode($result);
@@ -153,7 +161,7 @@ $app->get(
     '/manifest/:repo_id/:rev',
     function ($repo_id, $rev) use ($app) {
 
-    $root_dir = "/Users/Josh/Projects/";
+    $root_dir = $app->config('root');
 
     $dir = $root_dir . $repo_id;
 
@@ -173,6 +181,62 @@ $app->get(
 
 });
 
+
+
+
+$app->get(
+    '/file/:repo_id/:file_name',
+    function ($repo_id) use ($app) {
+
+    $root_dir = $app->config('root');
+
+    $dir = $root_dir . $repo_id;
+
+
+
+    // $branches = hg_branches(array(
+    //     "--cwd" => $dir
+    // ));
+
+    // $tags = hg_tags(array(
+    //     "--cwd" => $dir
+    // ));
+
+    // $summary = hg_summary(array(
+    //     "--cwd" => $dir
+    // ));
+
+
+    // $log = hg_log(array(
+    //     "--cwd" => $dir
+    // ));
+
+
+    // $manifest = hg_manifest(array(
+    //     "--cwd" => $dir
+    // ));
+
+
+    // $status = hg_status(array(
+    //     "--cwd" => $dir,
+    //     "--all" => ""
+    // ));
+
+    // $result = array(
+    //     "id" => $repo_id,
+    //     "branches" => $branches,
+    //     "tags" => $tags,
+    //     "summary" => $summary,
+    //     "manifest" => $manifest,
+    //     "status" => $status,
+    //     "log" => $log
+    // );
+
+    //echo json_encode($result);
+
+    echo json_encode($root_dir);
+
+});
 
 
 

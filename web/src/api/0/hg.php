@@ -151,29 +151,33 @@ function hg_status($options)
             $parts = explode(' ', $line, 2);
 
             $status = trim($parts[0]);
-            $file = trim($parts[1]);
+            $filename = trim($parts[1]);
+
+            $status_array = array('filename' => $filename);
 
             if ($status == 'C') {
-                $result[$file] = 'clean';
+                $status_array['status'] = 'clean';
             }
             elseif ($status == 'M') {
-                $result[$file] = 'modified';
+                $status_array['status'] = 'modified';
             }
             elseif ($status == 'A') {
-                $result[$file] = 'added';
+                $status_array['status'] = 'added';
             }
             elseif ($status == 'R') {
-                $result[$file] = 'removed';
+                $status_array['status'] = 'removed';
             }
             elseif ($status == 'I') {
-                $result[$file] = 'ignored';
+                $status_array['status'] = 'ignored';
             }
             elseif ($status == '!') {
-                $result[$file] = 'missing';
+                $status_array['status'] = 'missing';
             }
             elseif ($status == '?') {
-                $result[$file] = 'untracked';
+                $status_array['status'] = 'untracked';
             }
+
+            $result[] = $status_array;
         }
     }
 

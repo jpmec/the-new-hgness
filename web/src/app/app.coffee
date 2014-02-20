@@ -9,7 +9,6 @@ appModule = angular.module 'TheNewHgnessApp', [
    'ngRoute'
    'appViews'
    'ui.bootstrap'
-   'angular-chartjs-directive'
    'angular-hg'
    # 'angular-hg-views'
 ]
@@ -57,11 +56,17 @@ appModule.factory 'Diff', () ->
 
 
 
-appModule.factory 'Manifest', () ->
+appModule.factory 'StatusFilter', () ->
   object:
     value: null
 
 
+
+
+
+appModule.factory 'Manifest', () ->
+  object:
+    value: null
 
 
 appModule.service 'ReposService', ($http, Repos, Requesting) ->
@@ -245,8 +250,84 @@ appModule.controller 'RepoCtrl', ($scope, $routeParams, $timeout, Repo, RepoServ
   $scope.repoId = $routeParams.repoId
   $scope.repo = Repo.object
 
+  $scope.statusFilter = 'clean'
+
+  $scope.showFiles = {
+    'clean': true
+    'ignored': true
+    'modified': true
+    'added': true
+    'removed': true
+    'missing': true
+    'untracked': true
+  }
+
+  $scope.fileFilterClass = {
+    'clean':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'ignored':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'modified':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'added':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'removed':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'missing':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'untracked':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+  }
+
+
   $scope.get = (repoId) ->
     RepoService.get(repoId)
+
+
+  $scope.fileStatusFilter = (f) ->
+    $scope.showFiles[f.status]
+
+
+  $scope.toggleFileFilter = (key) ->
+    $scope.showFiles[key] = not $scope.showFiles[key]
+
+    if $scope.showFiles[key]
+      $scope.fileFilterClass[key].icon = 'fa fa-fw fa-eye'
+      $scope.fileFilterClass[key].button = 'btn active'
+    else
+      $scope.fileFilterClass[key].icon = 'fa fa-fw fa-eye-slash'
+      $scope.fileFilterClass[key].button = 'btn'
+
+
+  $scope.countStatus = (status) ->
+
+    if $scope.repo.value
+      statuses = _.pluck($scope.repo.value.status, 'status')
+
+      count = {}
+
+      _.forEach statuses, (status) ->
+        if status of count
+          count[status] = count[status] + 1
+        else
+          count[status] = 1
+      , count
+
+      if status of count
+        return count[status]
+      else
+        return 0
+    else
+      return 0
+
+
 
   if $scope.repoId
     $scope.get($scope.repoId)
@@ -295,3 +376,14 @@ appModule.controller 'ManifestCtrl', ($scope, $routeParams, $timeout, Manifest, 
   return
 
 
+
+
+
+appModule.controller 'StatusFilterCtrl', ($scope, StatusFilter) ->
+  $scope.statusFilter = StatusFilter.object
+
+
+  $scope.toggleStatus = () ->
+    return
+
+  return

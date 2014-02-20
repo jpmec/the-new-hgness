@@ -12,7 +12,6 @@
 
 <script type="text/javascript" src="js/angular-hg.js"></script>
 <script type="text/javascript" src="js/angular-hg-views.js"></script>
-<script type="text/javascript" src="js/angular-chartjs.js"></script>
 
 <script type="text/javascript" src="js/app.js"></script>
 <script type="text/javascript" src="js/app-views.js"></script>

@@ -42,19 +42,23 @@ m.directive 'hgStatus', ($filter) ->
   restrict: "E"
   replace: true
   template: """
-  <table class="table table-condensed table-responsive">
-      <tr ng-repeat="(file, fileStatus) in status">
-        <td class="angular-hg-filename angular-hg-status-{{fileStatus}}" >
-          {{file}}
-        </td>
-        <td>
-          {{fileStatus}}
-        </td>
-      </tr>
-  </table>
+  <div>
+    <table class="table table-condensed table-responsive">
+        <tr ng-repeat="file in status | filter:statusFilter">
+          <td class="angular-hg-filename angular-hg-status-{{file.status}}" >
+            {{file.filename}}
+          </td>
+          <td>
+            {{file.status}}
+          </td>
+        </tr>
+    </table>
+  </div>
   """
   scope:
     status: '=status'
+    repo: '=repo'
+    statusFilter: '=statusFilter'
 
 
 

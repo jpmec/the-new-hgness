@@ -7,10 +7,10 @@
     <tabset>
 
       <tab heading="Overview">
-        <h2><i class="fa fa-code-fork fa-fw"></i> Branches</h2>
+        <h2><i class="fa fa-code-fork fa-fw"></i> {{repo.value.branchesCount}} Branches</h2>
         <pre>{{repo.value.branches}}</pre>
 
-        <h2><i class="fa fa-tags fa-fw"></i> Tags</h2>
+        <h2><i class="fa fa-tags fa-fw"></i> {{repo.value.tagsCount}} Tags</h2>
         <pre>{{repo.value.tags}}</pre>
 
         <hg-summary-commit-alert summary="repo.value.summary"></hg-summary-commit-alert>
@@ -18,12 +18,37 @@
 
       </tab>
 
-      <tab heading="Files">
+      <tab heading="{{repo.value.statusCount}} Files">
         <p>&nbsp;</p>
-        <hg-status status="repo.value.status"></hg-status>
+
+        <button ng-class="fileFilterClass.clean.button" ng-click="toggleFileFilter('clean')" ng-show="countStatus('clean')">
+          <i ng-class="fileFilterClass.clean.icon"></i> {{countStatus('clean')}} clean
+        </button>
+        <button ng-class="fileFilterClass.modified.button" ng-click="toggleFileFilter('modified')" ng-show="countStatus('modified')">
+          <i ng-class="fileFilterClass.modified.icon"></i> {{countStatus('modified')}} modified
+        </button>
+        <button ng-class="fileFilterClass.added.button" ng-click="toggleFileFilter('added')" ng-show="countStatus('added')">
+          <i ng-class="fileFilterClass.added.icon"></i> {{countStatus('added')}} added
+        </button>
+        <button ng-class="fileFilterClass.removed.button" ng-click="toggleFileFilter('removed')" ng-show="countStatus('removed')">
+          <i ng-class="fileFilterClass.removed.icon"></i> {{countStatus('removed')}} removed
+        </button>
+        <button ng-class="fileFilterClass.missing.button" ng-click="toggleFileFilter('missing')" ng-show="countStatus('missing')">
+          <i ng-class="fileFilterClass.missing.icon"></i> {{countStatus('missing')}} missing
+        </button>
+        <button ng-class="fileFilterClass.untracked.button" ng-click="toggleFileFilter('untracked')" ng-show="countStatus('untracked')">
+          <i ng-class="fileFilterClass.untracked.icon"></i> {{countStatus('untracked')}} untracked
+        </button>
+        <button ng-class="fileFilterClass.ignored.button" ng-click="toggleFileFilter('ignored')" ng-show="countStatus('ignored')">
+          <i ng-class="fileFilterClass.ignored.icon"></i> {{countStatus('ignored')}} ignored
+        </button>
+
+        <p>&nbsp;</p>
+
+        <hg-status repo="repo.value.id" status="repo.value.status" status-filter="fileStatusFilter"></hg-status>
       </tab>
 
-      <tab heading="Log">
+      <tab heading="{{repo.value.logCount}} Logs">
         <p>&nbsp;</p>
         <hg-log log="repo.value.log"></hg-log>
       </tab>
