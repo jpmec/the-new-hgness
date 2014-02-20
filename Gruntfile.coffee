@@ -92,7 +92,7 @@ module.exports = (grunt) ->
           dest: '<%= path.dist %>/fonts/'
         ,
           expand: true
-          cwd: 'bower_modules/jquery/'
+          cwd: 'bower_modules/jquery/dist/'
           src: ['jquery.min.js']
           dest: '<%= path.dist %>/js/'
         ,
