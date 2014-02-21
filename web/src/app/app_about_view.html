@@ -1,0 +1,18 @@
+<div ng-controller="AboutCtrl" ng-cloak>
+
+  <h1>About <i class="fa fa-fw fa-heart"></i> The New Hgness</h1>
+  <hr>
+
+  <h2>What?</h2>
+  <p>The New Hgness purpose is to allow you to see the newest things in your Mecurial repositories.</p>
+
+  <h2>Version</h2>
+
+  <p>The New Hgness gets all its data from Mecurial.</p>
+
+  <div ng-controller="HgVersionCtrl">
+    <pre>{{hgVersion.value.version}}</pre>
+  </div>
+
+
+</div>

@@ -23,6 +23,10 @@ appModule.config ($routeProvider) ->
     templateUrl: 'app/app_repo_view.html'
   ).when('/diff/change/:repoId/:changeId',
     templateUrl: 'app/app_diff_view.html'
+  ).when('/file/:repoId/:fileName',
+    templateUrl: 'app/app_file_view.html'
+  ).when('/about',
+    templateUrl: 'app/app_about_view.html'
   ).otherwise redirectTo: '/repos'
 
 
@@ -49,6 +53,13 @@ appModule.factory 'Repo', () ->
 
 
 
+appModule.factory 'File', () ->
+  object:
+    value: null
+
+
+
+
 appModule.factory 'Diff', () ->
   object:
     value: null
@@ -63,10 +74,18 @@ appModule.factory 'StatusFilter', () ->
 
 
 
-
 appModule.factory 'Manifest', () ->
   object:
     value: null
+
+
+
+
+appModule.factory 'HgVersion', () ->
+  object:
+    value: null
+
+
 
 
 appModule.service 'ReposService', ($http, Repos, Requesting) ->
@@ -205,6 +224,76 @@ appModule.service 'ManifestService', ($http, Manifest, Requesting) ->
 
 
 
+appModule.service 'FileService', ($http, File, Requesting) ->
+
+  @url = 'api/0/file/'
+
+  @get = (repoId, fileName, onSuccess, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(@url + repoId + '/' + fileName)
+    .success (data, status, headers, config) ->
+      File.object.value = data
+
+      Requesting.object.value = false
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      File.object.value = null
+
+      Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
+  return
+
+
+
+
+
+appModule.service 'HgVersionService', ($http, HgVersion, Requesting) ->
+
+  @url = 'api/0/hg_version'
+
+  @get = (onSuccess, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(@url)
+    .success (data, status, headers, config) ->
+      HgVersion.object.value = data
+
+      Requesting.object.value = false
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      HgVersion.object.value = null
+
+      Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
+  return
+
+
+
+
+
 appModule.controller 'RequestingCtrl', ($scope, Requesting) ->
   $scope.requesting = Requesting.object
 
@@ -246,7 +335,8 @@ appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
 
 
 
-appModule.controller 'RepoCtrl', ($scope, $routeParams, $timeout, Repo, RepoService) ->
+appModule.controller 'RepoCtrl',
+($scope, $routeParams, $timeout, Repo, RepoService) ->
   $scope.repoId = $routeParams.repoId
   $scope.repo = Repo.object
 
@@ -336,7 +426,8 @@ appModule.controller 'RepoCtrl', ($scope, $routeParams, $timeout, Repo, RepoServ
 
 
 
-appModule.controller 'DiffCtrl', ($scope, $routeParams, $timeout, Diff, DiffService) ->
+appModule.controller 'DiffCtrl',
+($scope, $routeParams, $timeout, Diff, DiffService) ->
   $scope.repoId = $routeParams.repoId
   $scope.changeId = $routeParams.changeId
   $scope.diff = Diff.object
@@ -357,7 +448,8 @@ appModule.controller 'DiffCtrl', ($scope, $routeParams, $timeout, Diff, DiffServ
 
 
 
-appModule.controller 'ManifestCtrl', ($scope, $routeParams, $timeout, Manifest, ManifestService) ->
+appModule.controller 'ManifestCtrl',
+($scope, $routeParams, $timeout, Manifest, ManifestService) ->
   $scope.repoId = $routeParams.repoId
   $scope.changeId = $routeParams.changeId
   $scope.manifest = Manifest.object
@@ -387,3 +479,37 @@ appModule.controller 'StatusFilterCtrl', ($scope, StatusFilter) ->
     return
 
   return
+
+
+
+
+appModule.controller 'FileCtrl',
+($scope, $routeParams, $timeout, File, FileService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.fileName = $routeParams.fileName
+  $scope.file = File.object
+
+  return
+
+
+
+appModule.controller 'AboutCtrl',
+($scope) ->
+
+  return
+
+
+
+
+
+appModule.controller 'HgVersionCtrl',
+($scope, HgVersion, HgVersionService) ->
+  $scope.hgVersion = HgVersion.object
+
+  $scope.get = (repoId, changeId) ->
+    HgVersionService.get()
+
+  $scope.get()
+
+  return
+

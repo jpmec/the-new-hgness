@@ -23,25 +23,25 @@ $app->get(
     '/diff/change/:repo_id/:change',
     function ($repo_id, $change) use ($app) {
 
-    $root_dir = $app->config('root');
+        $root_dir = $app->config('root');
 
-    $dir = $root_dir . $repo_id;
+        $dir = $root_dir . $repo_id;
 
 
-    $hg = hg_diff(array(
-        "--cwd" => $dir,
-        "--change" => $change
-    ));
+        $hg = hg_diff(array(
+            "--cwd" => $dir,
+            "--change" => $change
+        ));
 
-    $result = array(
-        "id" => $repo_id,
-        "change" => $change,
-        "diff" => $hg
-    );
+        $result = array(
+            "id" => $repo_id,
+            "change" => $change,
+            "diff" => $hg
+        );
 
-    echo json_encode($result);
-
-});
+        echo json_encode($result);
+    }
+);
 
 
 
@@ -51,39 +51,41 @@ $app->get(
     '/repos',
     function () use ($app) {
 
-    $root_dir = $app->config('root');
+        $root_dir = $app->config('root');
 
 
-    //$result = scandir($root_dir);
+        //$result = scandir($root_dir);
 
-    $fullpaths = glob($root_dir . "**/" . ".hg");
+        $fullpaths = glob($root_dir . "**/" . ".hg");
 
-    foreach ($fullpaths as $fullpath)
-    {
-        $dir = dirname($fullpath);
-        $project_name = basename($dir);
+        foreach ($fullpaths as $fullpath)
+        {
+            $dir = dirname($fullpath);
+            $project_name = basename($dir);
 
-        $log = hg_log(array(
-            "--cwd" => $dir,
-            "--limit" => 1
-        ));
+            $log = hg_log(array(
+                "--cwd" => $dir,
+                "--limit" => 1
+            ));
 
 
-        $summary = hg_summary(array(
-            "--cwd" => $dir
-        ));
 
-        $result[] = array(
-            "projectName" => $project_name,
-            "dir" => $dir,
-            "summary" => $summary,
-            "log" => $log
-        );
+            $summary = hg_summary(array(
+                "--cwd" => $dir
+            ));
+
+            $result[] = array(
+                "projectName" => $project_name,
+                "dir" => $dir,
+                "summary" => $summary,
+                "log" => $log
+            );
+        }
+
+        echo json_encode($result);
+
     }
-
-    echo json_encode($result);
-
-});
+);
 
 
 
@@ -92,63 +94,64 @@ $app->get(
     '/repo/:repo_id',
     function ($repo_id) use ($app) {
 
-    $root_dir = $app->config('root');
+        $root_dir = $app->config('root');
 
-    $dir = $root_dir . $repo_id;
+        $dir = $root_dir . $repo_id;
 
-    // $summary = hg_summary($dir, null);
+        // $summary = hg_summary($dir, null);
 
-    // $result = array(
-    //     "projectName" => $repo_id,
-    //     "dir" => $dir,
-    //     "summary" => $summary
-    // );
+        // $result = array(
+        //     "projectName" => $repo_id,
+        //     "dir" => $dir,
+        //     "summary" => $summary
+        // );
 
-    $branches = hg_branches(array(
-        "--cwd" => $dir
-    ));
+        $branches = hg_branches(array(
+            "--cwd" => $dir
+        ));
 
-    $tags = hg_tags(array(
-        "--cwd" => $dir
-    ));
+        $tags = hg_tags(array(
+            "--cwd" => $dir
+        ));
 
-    $summary = hg_summary(array(
-        "--cwd" => $dir
-    ));
-
-
-    $log = hg_log(array(
-        "--cwd" => $dir
-    ));
+        $summary = hg_summary(array(
+            "--cwd" => $dir
+        ));
 
 
-    $manifest = hg_manifest(array(
-        "--cwd" => $dir
-    ));
+        $log = hg_log(array(
+            "--cwd" => $dir
+        ));
 
 
-    $status = hg_status(array(
-        "--cwd" => $dir,
-        "--all" => ""
-    ));
+        $manifest = hg_manifest(array(
+            "--cwd" => $dir
+        ));
 
-    $result = array(
-        "id" => $repo_id,
-        "branches" => $branches,
-        "branchesCount" => count($branches),
-        "tags" => $tags,
-        "tagsCount" => count($tags),
-        "summary" => $summary,
-        "manifest" => $manifest,
-        "status" => $status,
-        "statusCount" => count($status),
-        "log" => $log,
-        "logCount" => count($log)
-    );
 
-    echo json_encode($result);
+        $status = hg_status(array(
+            "--cwd" => $dir,
+            "--all" => ""
+        ));
 
-});
+        $result = array(
+            "id" => $repo_id,
+            "branches" => $branches,
+            "branchesCount" => count($branches),
+            "tags" => $tags,
+            "tagsCount" => count($tags),
+            "summary" => $summary,
+            "manifest" => $manifest,
+            "status" => $status,
+            "statusCount" => count($status),
+            "log" => $log,
+            "logCount" => count($log)
+        );
+
+        echo json_encode($result);
+
+    }
+);
 
 
 
@@ -161,25 +164,26 @@ $app->get(
     '/manifest/:repo_id/:rev',
     function ($repo_id, $rev) use ($app) {
 
-    $root_dir = $app->config('root');
+        $root_dir = $app->config('root');
 
-    $dir = $root_dir . $repo_id;
+        $dir = $root_dir . $repo_id;
 
 
-    $hg = hg_manifest(array(
-        "--cwd" => $dir,
-        "--rev" => $rev
-    ));
+        $hg = hg_manifest(array(
+            "--cwd" => $dir,
+            "--rev" => $rev
+        ));
 
-    $result = array(
-        "id" => $repo_id,
-        "rev" => $rev,
-        "manifest" => $hg
-    );
+        $result = array(
+            "id" => $repo_id,
+            "rev" => $rev,
+            "manifest" => $hg
+        );
 
-    echo json_encode($result);
+        echo json_encode($result);
 
-});
+    }
+);
 
 
 
@@ -188,55 +192,94 @@ $app->get(
     '/file/:repo_id/:file_name',
     function ($repo_id) use ($app) {
 
-    $root_dir = $app->config('root');
+        $root_dir = $app->config('root');
 
-    $dir = $root_dir . $repo_id;
-
-
-
-    // $branches = hg_branches(array(
-    //     "--cwd" => $dir
-    // ));
-
-    // $tags = hg_tags(array(
-    //     "--cwd" => $dir
-    // ));
-
-    // $summary = hg_summary(array(
-    //     "--cwd" => $dir
-    // ));
+        $dir = $root_dir . $repo_id;
 
 
-    // $log = hg_log(array(
-    //     "--cwd" => $dir
-    // ));
+
+        // $branches = hg_branches(array(
+        //     "--cwd" => $dir
+        // ));
+
+        // $tags = hg_tags(array(
+        //     "--cwd" => $dir
+        // ));
+
+        // $summary = hg_summary(array(
+        //     "--cwd" => $dir
+        // ));
 
 
-    // $manifest = hg_manifest(array(
-    //     "--cwd" => $dir
-    // ));
+        // $log = hg_log(array(
+        //     "--cwd" => $dir
+        // ));
 
 
-    // $status = hg_status(array(
-    //     "--cwd" => $dir,
-    //     "--all" => ""
-    // ));
+        // $manifest = hg_manifest(array(
+        //     "--cwd" => $dir
+        // ));
 
-    // $result = array(
-    //     "id" => $repo_id,
-    //     "branches" => $branches,
-    //     "tags" => $tags,
-    //     "summary" => $summary,
-    //     "manifest" => $manifest,
-    //     "status" => $status,
-    //     "log" => $log
-    // );
 
-    //echo json_encode($result);
+        // $status = hg_status(array(
+        //     "--cwd" => $dir,
+        //     "--all" => ""
+        // ));
 
-    echo json_encode($root_dir);
+        // $result = array(
+        //     "id" => $repo_id,
+        //     "branches" => $branches,
+        //     "tags" => $tags,
+        //     "summary" => $summary,
+        //     "manifest" => $manifest,
+        //     "status" => $status,
+        //     "log" => $log
+        // );
 
-});
+        //echo json_encode($result);
+
+        echo json_encode($dir);
+
+    }
+);
+
+
+
+
+$app->get(
+    '/hg',
+    function () use ($app) {
+
+        // $hg = hg_version();
+
+        // $result = array(
+        //     "version" => $hg
+        // );
+
+        //echo json_encode($result);
+
+        echo 'whazzup!';
+
+    }
+);
+
+
+
+$app->get(
+    '/hg_version',
+    function () use ($app) {
+
+        $hg = hg_version(null);
+
+        $result = array(
+            "version" => $hg
+        );
+
+        echo json_encode($result);
+
+    }
+);
+
 
 
 

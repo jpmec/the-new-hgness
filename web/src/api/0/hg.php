@@ -1,14 +1,20 @@
 <?php
 
+date_default_timezone_set('America/Chicago');
 
 
 function hg_cli($cmd, $options)
 {
-    $options_str = ' ';
 
-    foreach ($options as $key=>$value)
+    $options_str = '';
+    if (!is_null($options))
     {
-        $options_str .= $key . ' ' . $value . ' ';
+        $options_str = ' ';
+
+        foreach ($options as $key=>$value)
+        {
+            $options_str .= $key . ' ' . $value . ' ';
+        }
     }
 
     return '/opt/local/bin/hg ' . $cmd . $options_str;
@@ -55,12 +61,11 @@ function hg_diff($options)
 
 function hg_log($options)
 {
-
     $cli = hg_cli('log', $options);
 
-    $logs = shell_exec($cli);
+    $hg = shell_exec($cli);
 
-    $lines = explode(PHP_EOL, $logs);
+    $lines = explode(PHP_EOL, $hg);
 
     $result = '';
     $log = array();
@@ -69,7 +74,18 @@ function hg_log($options)
         if (0 < strlen($line))
         {
             $parts = explode(':', $line, 2);
-            $log[trim($parts[0])] = trim($parts[1]);
+
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+
+            if ($key == "date")
+            {
+                $log[$key] = strtotime($value) * 1000;
+            }
+            else
+            {
+                $log[$key] = $value;
+            }
         }
         else
         {

@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><i class="fa fa-heart fa-fw"></i> The New Hgness</a>
+      <a class="navbar-brand" href="#/about"><i class="fa fa-heart fa-fw"></i> The New Hgness</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -17,7 +17,7 @@
       <ul class="nav navbar-nav">
       </ul>
 
-      <span class="navbar-text pull-right"><q> <i class="fa fa-heart-o fa-fw"></i> <u>all</u> the things! </q></span>
+      <span class="navbar-text pull-right"><q> <i class="fa fa-bullhorn fa-fw"></i> <u>all</u> the Hg! </q></span>
     </div>
 
   </div>
