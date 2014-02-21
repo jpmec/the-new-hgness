@@ -26,7 +26,7 @@ module.exports = (grunt) ->
 
 
     coffeelint:
-      all: ['Gruntfile.coffee', 'src/app/app.coffee']
+      all: ['Gruntfile.coffee', 'web/src/app/*.coffee']
 
 
     copy:
