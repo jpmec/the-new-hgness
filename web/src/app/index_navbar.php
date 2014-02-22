@@ -15,6 +15,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+        <li><a href="#/repos"><i class="fa fa-fw fa-archive"></i> Repos</a></li>
       </ul>
 
       <span class="navbar-text pull-right"><q> <i class="fa fa-bullhorn fa-fw"></i> <u>all</u> the Hg! </q></span>

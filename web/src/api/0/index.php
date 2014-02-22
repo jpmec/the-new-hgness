@@ -190,7 +190,7 @@ $app->get(
 
 $app->get(
     '/file/:repo_id/:file_name',
-    function ($repo_id) use ($app) {
+    function ($repo_id, $file_name) use ($app) {
 
         $root_dir = $app->config('root');
 
@@ -198,9 +198,9 @@ $app->get(
 
 
 
-        // $branches = hg_branches(array(
-        //     "--cwd" => $dir
-        // ));
+        $file = hg_cat(array(
+            "--cwd" => $dir
+        ), $file_name);
 
         // $tags = hg_tags(array(
         //     "--cwd" => $dir
@@ -238,30 +238,13 @@ $app->get(
 
         //echo json_encode($result);
 
-        echo json_encode($dir);
+        echo json_encode(array(
+            'file' => $file
+        ));
 
     }
 );
 
-
-
-
-$app->get(
-    '/hg',
-    function () use ($app) {
-
-        // $hg = hg_version();
-
-        // $result = array(
-        //     "version" => $hg
-        // );
-
-        //echo json_encode($result);
-
-        echo 'whazzup!';
-
-    }
-);
 
 
 

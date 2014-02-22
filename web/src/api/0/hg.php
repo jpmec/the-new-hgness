@@ -6,6 +6,10 @@ date_default_timezone_set('America/Chicago');
 function hg_cli($cmd, $options)
 {
 
+//    $num_args = func_num_args();
+//    $args = func_get_args();
+
+
     $options_str = '';
     if (!is_null($options))
     {
@@ -38,6 +42,20 @@ function hg_annotate($options)
 function hg_branches($options)
 {
     $cli = hg_cli('branches', $options);
+
+    $hg = shell_exec($cli);
+
+    return $hg;
+}
+
+
+
+
+function hg_cat($options, $file)
+{
+    $cli = hg_cli('cat', $options);
+
+    $cli .= ' ' . $file;
 
     $hg = shell_exec($cli);
 

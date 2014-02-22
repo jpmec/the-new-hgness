@@ -1,10 +1,12 @@
 <div ng-controller="DiffCtrl" ng-cloak>
 
-  <h1><i class="fa fa-folder-open fa-fw"></i> {{diff.value.id}}</h1>
+  <h1>
+    <a href="#/repo/{{diff.value.id}}"><i class="fa fa-folder-open fa-fw"></i> {{diff.value.id}}</a>
+  </h1>
   <hr>
 
   <h2>{{diff.value.change}}</h2>
 
-  <pre>{{diff.value.diff}}</pre>
+  <hg-diff diff="diff.value.diff"></hg-diff>
 
 </div>

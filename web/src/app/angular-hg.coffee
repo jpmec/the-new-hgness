@@ -4,6 +4,16 @@ m = angular.module "angular-hg", []
 
 
 
+m.directive 'hgDiff', ($filter) ->
+  restrict: "E"
+  replace: true
+  scope:
+    diff: '=diff'
+
+  template: """
+  <pre>{{diff}}</pre>
+  """
+
 
 m.directive 'hgLog', ($filter) ->
 
@@ -32,7 +42,9 @@ m.directive 'hgLog', ($filter) ->
         <td>{{logItem.user | hgUser}}</td>
         <td>
           <span tooltip-placement="left" tooltip="{{logItem.changeset}}">
-            <b>{{logItem.summary}}</b>
+            <a href="#/diff/change/{{repo}}/{{logItem.changeset}}">
+              <b>{{logItem.summary}}</b>
+            </a>
           </span>
         </td>
       </tr>
@@ -40,6 +52,7 @@ m.directive 'hgLog', ($filter) ->
   </table>
   """
   scope:
+    repo: '=repo'
     log: '=log'
 
 

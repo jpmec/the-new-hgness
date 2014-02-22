@@ -489,7 +489,14 @@ appModule.controller 'FileCtrl',
   $scope.fileName = $routeParams.fileName
   $scope.file = File.object
 
+
+  $scope.get = (repoId, fileName) ->
+    FileService.get(repoId, fileName)
+
+  $scope.get($scope.repoId, $scope.fileName)
+
   return
+
 
 
 
