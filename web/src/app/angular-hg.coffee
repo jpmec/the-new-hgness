@@ -81,7 +81,20 @@ m.directive 'hgFile', ($filter) ->
     file: '=file'
 
   template: """
-  <pre>{{file}}</pre>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <table class="table-hover">
+        <tr ng-repeat="line in file.lines track by $index">
+          <td>
+            <span class="angular-hg-file-line-number">{{$index}}</span>
+          </td>
+          <td>
+            <span class="angular-hg-file-line">{{line}}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
   """
 
 

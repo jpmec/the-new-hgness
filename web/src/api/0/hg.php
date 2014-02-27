@@ -59,7 +59,11 @@ function hg_cat($options, $file)
 
     $hg = shell_exec($cli);
 
-    return $hg;
+    $lines = explode(PHP_EOL, $hg);
+
+    $result = array('lines' => $lines);
+
+    return $result;
 }
 
 
