@@ -1,12 +1,14 @@
 <div ng-controller="RepoCtrl" ng-cloak>
 
   <div ng-controller="RequestingCtrl" ng-hide="requesting.value">
-    <h1><i class="fa fa-folder-open fa-fw"></i> {{repo.value.id}}</h1>
+    <h1>
+      <i class="fa fa-folder-open fa-fw"></i> {{repo.value.id}}
+    </h1>
     <hr>
 
     <tabset>
 
-      <tab heading="Overview">
+      <tab heading="Overview" active="tabs.overview.active">
         <h2><i class="fa fa-code-fork fa-fw"></i> {{repo.value.branchesCount}} Branches</h2>
         <pre>{{repo.value.branches}}</pre>
 
@@ -18,7 +20,7 @@
 
       </tab>
 
-      <tab heading="{{repo.value.statusCount}} Files">
+      <tab heading="{{repo.value.statusCount}} Files" active="tabs.files.active">
         <p>&nbsp;</p>
 
         <button ng-class="fileFilterClass.clean.button" ng-click="toggleFileFilter('clean')" ng-show="countStatus('clean')">
@@ -48,7 +50,7 @@
         <hg-status repo="repo.value.id" status="repo.value.status" status-filter="fileStatusFilter"></hg-status>
       </tab>
 
-      <tab heading="{{repo.value.logCount}} Logs">
+      <tab heading="{{repo.value.logCount}} Logs" active="tabs.logs.active">
         <p>&nbsp;</p>
         <hg-log repo="repo.value.id" log="repo.value.log"></hg-log>
       </tab>

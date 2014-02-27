@@ -71,7 +71,94 @@ function hg_diff($options)
 
     $hg = shell_exec($cli);
 
-    return $hg;
+
+    $lines = explode(PHP_EOL, $hg);
+
+    $result = array(
+        'raw' => $hg,
+        'files' => array()
+    );
+
+
+    $file = null;
+    $hunk = null;
+    foreach ($lines as $line)
+    {
+        $matches = array();
+        if (preg_match ('/^diff (.*) (.*) (.*) (.*) (.*)$/', $line, $matches))
+        {
+            if (!is_null($file))
+            {
+                $result['files'][] = $file;
+            }
+
+            $file = array(
+                'name' => $matches[5],
+                'hunks' => array()
+            );
+        }
+
+        else if (preg_match ('/^--- (.*)\t(.*)$/', $line, $matches))
+        {
+            $file['from-file'] = $matches[1];
+            $file['from-file-modification-time'] = strtotime($matches[2]);
+        }
+
+        else if (preg_match ('/^\+\+\+ (.*)\t(.*)$/', $line, $matches))
+        {
+            $file['to-file'] = $matches[1];
+            $file['to-file-modification-time'] = strtotime($matches[2]);
+        }
+
+        else if (preg_match ('/^@@ (.*) (.*) @@$/', $line, $matches))
+        {
+            if (!is_null($hunk))
+            {
+                $file['hunks'][] = $hunk;
+            }
+
+            $hunk = array(
+                'lines' => array()
+            );
+
+            $hunk['from-file-line-numbers'] = $matches[1];
+            $hunk['to-file-line-numbers'] = $matches[2];
+        }
+
+        // else if (preg_match ('/^\+(.*)$/'))
+        // {
+        //     $hunk['lines'][] = $line;
+        // }
+
+        else
+        {
+            if (preg_match('/^\s*\+\s*(.*)$/', $line, $matches))
+            {
+                $hunk['lines'][] = array('text' => $line, 'status' => 'added');
+            }
+            elseif (preg_match('/^\s*-\s*(.*)$/', $line, $matches))
+            {
+                $hunk['lines'][] = array('text' => $line, 'status' => 'removed');
+            }
+            else
+            {
+                $hunk['lines'][] = array('text' => $line, 'status' => 'same');
+            }
+        }
+
+    }
+
+    if (!is_null($hunk))
+    {
+        $file['hunks'][] = $hunk;
+    }
+
+    if (!is_null($file))
+    {
+        $result['files'][] = $file;
+    }
+
+    return $result;
 }
 
 

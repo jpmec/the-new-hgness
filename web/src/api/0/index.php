@@ -193,53 +193,16 @@ $app->get(
     function ($repo_id, $file_name) use ($app) {
 
         $root_dir = $app->config('root');
-
         $dir = $root_dir . $repo_id;
 
 
-
-        $file = hg_cat(array(
+        $hg = hg_cat(array(
             "--cwd" => $dir
         ), $file_name);
 
-        // $tags = hg_tags(array(
-        //     "--cwd" => $dir
-        // ));
-
-        // $summary = hg_summary(array(
-        //     "--cwd" => $dir
-        // ));
-
-
-        // $log = hg_log(array(
-        //     "--cwd" => $dir
-        // ));
-
-
-        // $manifest = hg_manifest(array(
-        //     "--cwd" => $dir
-        // ));
-
-
-        // $status = hg_status(array(
-        //     "--cwd" => $dir,
-        //     "--all" => ""
-        // ));
-
-        // $result = array(
-        //     "id" => $repo_id,
-        //     "branches" => $branches,
-        //     "tags" => $tags,
-        //     "summary" => $summary,
-        //     "manifest" => $manifest,
-        //     "status" => $status,
-        //     "log" => $log
-        // );
-
-        //echo json_encode($result);
 
         echo json_encode(array(
-            'file' => $file
+            'file' => $hg
         ));
 
     }

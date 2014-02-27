@@ -11,8 +11,80 @@ m.directive 'hgDiff', ($filter) ->
     diff: '=diff'
 
   template: """
-  <pre>{{diff}}</pre>
+  <div>
+    <div ng-repeat="file in diff.files">
+      <h3>{{file.name}}</h3>
+      <h4>
+        {{file['from-file']}}
+        {{file['from-file-modification-time'] | date:'short'}}
+      </h4>
+      <h4>
+        {{file['to-file']}}
+        {{file['to-file-modification-time'] | date:'short'}}
+      </h4>
+      <div ng-repeat="hunk in file.hunks">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title">
+              <h5>
+                {{hunk['from-file-line-numbers']}}
+                {{hunk['to-file-line-numbers']}}
+              </h5>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div ng-repeat="hunkline in hunk['lines'] track by $index">
+              <span class="angular-hg-hunk-line-{{hunkline.status}}">{{hunkline.text}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   """
+
+
+
+
+  # template: """
+  # <div>
+  #   <pre>{{diff.files}}</pre>
+  #   <pre>{{diff.raw}}</pre>
+
+  #   <div ng-repeat="file in diff.files">
+  #     <h3>{{file.name}}</h3>
+  #     <h4>{{file['from-file']}} {{file['from-file-modification-time']}}</h4>
+  #     <h4>{{file['to-file']}} {{file['to-file-modification-time']}}</h4>
+
+  #     <div ng-repeat="hunk in file.hunks">
+
+  #       {{hunk['from-file-line-numbers']}}
+  #       {{hunk['to-file-line-numbers']}}
+
+  #       <pre ng-repeat="line in hunk.lines">
+  #         {{line}}
+  #       </pre>
+  #     </div>
+
+  #     <pre>{{file}}</pre>
+  #   </div>
+  # </div>
+  # """
+
+
+
+m.directive 'hgFile', ($filter) ->
+  restrict: "E"
+  replace: true
+  scope:
+    repo: '=repo'
+    file: '=file'
+
+  template: """
+  <pre>{{file}}</pre>
+  """
+
+
 
 
 m.directive 'hgLog', ($filter) ->

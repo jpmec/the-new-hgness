@@ -293,6 +293,66 @@ appModule.service 'HgVersionService', ($http, HgVersion, Requesting) ->
 
 
 
+appModule.controller 'DiffCtrl',
+($scope, $routeParams, $timeout, Diff, DiffService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.changeId = $routeParams.changeId
+  $scope.diff = Diff.object
+  $scope.timeoutMilliseconds = 1000000
+
+  $scope.get = (repoId, changeId) ->
+    DiffService.getChange(repoId, changeId, ()->
+      $timeout( () ->
+        $scope.get(repoId, changeId)
+      , $scope.timeoutMilliseconds)
+    )
+
+  if $scope.repoId and $scope.changeId
+    $scope.get($scope.repoId, $scope.changeId)
+
+  return
+
+
+
+
+appModule.controller 'FileCtrl',
+($scope, $routeParams, $timeout, File, FileService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.fileName = $routeParams.fileName
+  $scope.file = File.object
+
+
+  $scope.get = (repoId, fileName) ->
+    FileService.get(repoId, fileName)
+
+  $scope.get($scope.repoId, $scope.fileName)
+
+  return
+
+
+
+
+appModule.controller 'ManifestCtrl',
+($scope, $routeParams, $timeout, Manifest, ManifestService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.changeId = $routeParams.changeId
+  $scope.manifest = Manifest.object
+  $scope.timeoutMilliseconds = 1000000
+
+  $scope.get = (repoId, changeId) ->
+    ManifestService.get(repoId, changeId, ()->
+      $timeout( () ->
+        $scope.get(repoId, changeId)
+      , $scope.timeoutMilliseconds)
+    )
+
+  if $scope.repoId and $scope.changeId
+    $scope.get($scope.repoId, $scope.changeId)
+
+  return
+
+
+
 
 appModule.controller 'RequestingCtrl', ($scope, Requesting) ->
   $scope.requesting = Requesting.object
@@ -341,6 +401,15 @@ appModule.controller 'RepoCtrl',
   $scope.repo = Repo.object
 
   $scope.statusFilter = 'clean'
+
+  $scope.tabs = {
+    'overview':
+      'active': 'overview' == $routeParams.active
+    'files':
+      'active': 'files' == $routeParams.active
+    'logs':
+      'active': 'logs' == $routeParams.active
+  }
 
   $scope.showFiles = {
     'clean': true
@@ -426,50 +495,6 @@ appModule.controller 'RepoCtrl',
 
 
 
-appModule.controller 'DiffCtrl',
-($scope, $routeParams, $timeout, Diff, DiffService) ->
-  $scope.repoId = $routeParams.repoId
-  $scope.changeId = $routeParams.changeId
-  $scope.diff = Diff.object
-  $scope.timeoutMilliseconds = 1000000
-
-  $scope.get = (repoId, changeId) ->
-    DiffService.getChange(repoId, changeId, ()->
-      $timeout( () ->
-        $scope.get(repoId, changeId)
-      , $scope.timeoutMilliseconds)
-    )
-
-  if $scope.repoId and $scope.changeId
-    $scope.get($scope.repoId, $scope.changeId)
-
-  return
-
-
-
-
-appModule.controller 'ManifestCtrl',
-($scope, $routeParams, $timeout, Manifest, ManifestService) ->
-  $scope.repoId = $routeParams.repoId
-  $scope.changeId = $routeParams.changeId
-  $scope.manifest = Manifest.object
-  $scope.timeoutMilliseconds = 1000000
-
-  $scope.get = (repoId, changeId) ->
-    ManifestService.get(repoId, changeId, ()->
-      $timeout( () ->
-        $scope.get(repoId, changeId)
-      , $scope.timeoutMilliseconds)
-    )
-
-  if $scope.repoId and $scope.changeId
-    $scope.get($scope.repoId, $scope.changeId)
-
-  return
-
-
-
-
 
 appModule.controller 'StatusFilterCtrl', ($scope, StatusFilter) ->
   $scope.statusFilter = StatusFilter.object
@@ -480,22 +505,6 @@ appModule.controller 'StatusFilterCtrl', ($scope, StatusFilter) ->
 
   return
 
-
-
-
-appModule.controller 'FileCtrl',
-($scope, $routeParams, $timeout, File, FileService) ->
-  $scope.repoId = $routeParams.repoId
-  $scope.fileName = $routeParams.fileName
-  $scope.file = File.object
-
-
-  $scope.get = (repoId, fileName) ->
-    FileService.get(repoId, fileName)
-
-  $scope.get($scope.repoId, $scope.fileName)
-
-  return
 
 
 

@@ -26,6 +26,9 @@ module.exports = (grunt) ->
 
 
     coffeelint:
+      options:
+        'max_line_length':
+          'level': 'ignore'
       all: ['Gruntfile.coffee', 'web/src/app/*.coffee']
 
 
@@ -48,17 +51,17 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'bower_modules/angular/'
-          src: ['angular.min.js']
+          src: ['angular.js']
           dest: '<%= path.dist %>/js/'
         ,
           expand: true
           cwd: 'bower_modules/angular-route/'
-          src: ['angular-route.min.js']
+          src: ['angular-route.js']
           dest: '<%= path.dist %>/js/'
         ,
           expand: true
           cwd: 'bower_modules/angular-ui-bootstrap-bower/'
-          src: ['ui-bootstrap-tpls.min.js']
+          src: ['ui-bootstrap-tpls.js']
           dest: '<%= path.dist %>/js/'
         ,
           expand: true
@@ -73,7 +76,7 @@ module.exports = (grunt) ->
         ,
           expand: true
           cwd: 'bower_modules/bootstrap/dist/js/'
-          src: ['bootstrap.min.js']
+          src: ['bootstrap.js']
           dest: '<%= path.dist %>/js/'
         ,
           expand: true
@@ -93,7 +96,7 @@ module.exports = (grunt) ->
         ,
           expand: true
           cwd: 'bower_modules/jquery/dist/'
-          src: ['jquery.min.js']
+          src: ['jquery.js']
           dest: '<%= path.dist %>/js/'
         ,
           expand: true
