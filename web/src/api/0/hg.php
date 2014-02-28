@@ -75,7 +75,6 @@ function hg_diff($options)
 
     $hg = shell_exec($cli);
 
-
     $lines = explode(PHP_EOL, $hg);
 
     $result = array(
@@ -114,7 +113,7 @@ function hg_diff($options)
             $file['to-file-modification-time'] = strtotime($matches[2]);
         }
 
-        else if (preg_match ('/^@@ (.*) (.*) @@$/', $line, $matches))
+        else if (preg_match ('/^@@ -(.*),(.*) \+(.*),(.*) @@$/', $line, $matches))
         {
             if (!is_null($hunk))
             {
@@ -125,8 +124,10 @@ function hg_diff($options)
                 'lines' => array()
             );
 
-            $hunk['from-file-line-numbers'] = $matches[1];
-            $hunk['to-file-line-numbers'] = $matches[2];
+            $hunk['from-file-line-number'] = $matches[1];
+            $hunk['from-file-line-count'] = $matches[2];
+            $hunk['to-file-line-number'] = $matches[3];
+            $hunk['to-file-line-count'] = $matches[4];
         }
 
         // else if (preg_match ('/^\+(.*)$/'))

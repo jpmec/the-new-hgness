@@ -4,16 +4,30 @@ m = angular.module "angular-hg", []
 
 
 
+m.controller 'hgHunkCtrl',
+($scope) ->
+
+  $scope.number = ($offset, $index) ->
+    parseInt($offset) + parseInt($index)
+
+  return
+
+
+
 m.directive 'hgDiff', ($filter) ->
   restrict: "E"
   replace: true
   scope:
     diff: '=diff'
+    repo: '=repo'
+    rev: '=rev'
 
   template: """
   <div>
     <div ng-repeat="file in diff.files">
-      <h3>{{file.name}}</h3>
+      <h3>
+        <a href="#/file/{{repo}}/{{file.name}}?rev={{rev}}">{{file.name}}</a>
+      </h3>
       <h4>
         {{file['from-file']}}
         {{file['from-file-modification-time'] | date:'short'}}
@@ -22,20 +36,32 @@ m.directive 'hgDiff', ($filter) ->
         {{file['to-file']}}
         {{file['to-file-modification-time'] | date:'short'}}
       </h4>
-      <div ng-repeat="hunk in file.hunks">
+      <div ng-repeat="hunk in file.hunks" ng-controller="hgHunkCtrl">
         <div class="panel panel-default">
           <div class="panel-heading">
             <div class="panel-title">
               <h5>
-                {{hunk['from-file-line-numbers']}}
-                {{hunk['to-file-line-numbers']}}
+                {{hunk['from-file-line-number']}}
+                {{hunk['to-file-line-number']}}
               </h5>
             </div>
           </div>
           <div class="panel-body">
-            <div ng-repeat="hunkline in hunk['lines'] track by $index">
-              <span class="angular-hg-hunk-line-{{hunkline.status}}">{{hunkline.text}}</span>
-            </div>
+            <table>
+              <tbody>
+                <tr ng-repeat="hunkline in hunk['lines'] track by $index">
+                  <td>
+                    <span class="angular-hg-file-line-number">{{number(hunk['from-file-line-number'], $index)}}</span>
+                  </td>
+                  <td>
+                    <span class="angular-hg-file-line-number">{{number(hunk['to-file-line-number'], $index)}}</span>
+                  </td>
+                  <td>
+                    <span class="angular-hg-hunk-line-{{hunkline.status}}">{{hunkline.text}}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

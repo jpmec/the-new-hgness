@@ -228,11 +228,16 @@ appModule.service 'FileService', ($http, File, Requesting) ->
 
   @url = 'api/0/file/'
 
-  @get = (repoId, fileName, onSuccess, onError) ->
+  @get = (repoId, fileName, rev, onSuccess, onError) ->
 
     Requesting.object.value = true
 
-    $http.get(@url + repoId + '/' + fileName)
+    url = @url + repoId + '/' + fileName
+
+    if rev
+      url += '?rev=' + rev
+
+    $http.get(url)
     .success (data, status, headers, config) ->
       File.object.value = data
 
@@ -319,13 +324,14 @@ appModule.controller 'FileCtrl',
 ($scope, $routeParams, $timeout, File, FileService) ->
   $scope.repoId = $routeParams.repoId
   $scope.fileName = $routeParams.fileName
+  $scope.rev = $routeParams.rev
   $scope.file = File.object
 
 
-  $scope.get = (repoId, fileName) ->
-    FileService.get(repoId, fileName)
+  $scope.get = (repoId, fileName, rev) ->
+    FileService.get(repoId, fileName, rev)
 
-  $scope.get($scope.repoId, $scope.fileName)
+  $scope.get($scope.repoId, $scope.fileName, $scope.rev)
 
   return
 

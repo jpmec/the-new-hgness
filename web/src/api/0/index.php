@@ -11,6 +11,7 @@ require 'Slim/Slim.php';
 
 
 $app = new \Slim\Slim();
+$app->response->headers->set('Content-Type', 'application/json');
 
 
 $app->config(array(
@@ -34,7 +35,7 @@ $app->get(
         ));
 
         $result = array(
-            "id" => $repo_id,
+            "repo" => $repo_id,
             "change" => $change,
             "diff" => $hg
         );
@@ -156,10 +157,6 @@ $app->get(
 
 
 
-
-
-
-
 $app->get(
     '/manifest/:repo_id/:rev',
     function ($repo_id, $rev) use ($app) {
@@ -195,15 +192,30 @@ $app->get(
         $root_dir = $app->config('root');
         $dir = $root_dir . $repo_id;
 
-
-        $hg = hg_cat(array(
+        $options = array(
             "--cwd" => $dir
-        ), $file_name);
+        );
 
+        $result = array(
+            'file' => array(
+                'name' => $file_name,
+                'repo' => $repo_id
+            )
+        );
 
-        echo json_encode(array(
-            'file' => $hg
-        ));
+        $rev = $app->request()->get('rev');
+
+        if (!is_null($rev))
+        {
+            $options['--rev'] = $rev;
+            $result['file']['rev'] = $rev;
+        }
+
+        $hg = hg_cat($options, $file_name);
+
+        $result['file'] = array_merge($result['file'], $hg);
+
+        echo json_encode($result);
 
     }
 );
