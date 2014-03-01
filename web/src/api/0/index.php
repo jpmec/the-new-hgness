@@ -158,6 +158,62 @@ $app->get(
 
 
 $app->get(
+    '/repo_files/:repo_id',
+    function ($repo_id) use ($app) {
+
+        $root_dir = $app->config('root');
+
+        $dir = $root_dir . $repo_id;
+
+        $status = hg_status(array(
+            "--cwd" => $dir,
+            "--all" => ""
+        ));
+
+        $result = array(
+            "id" => $repo_id,
+            "status" => $status,
+            "statusCount" => count($status)
+        );
+
+        echo json_encode($result);
+
+    }
+);
+
+
+
+
+$app->get(
+    '/repo_logs/:repo_id',
+    function ($repo_id) use ($app) {
+
+        $root_dir = $app->config('root');
+
+        $dir = $root_dir . $repo_id;
+
+
+
+        $log = hg_log(array(
+            "--cwd" => $dir
+        ));
+
+
+        $result = array(
+            "id" => $repo_id,
+            "log" => $log,
+            "logCount" => count($log)
+        );
+
+        echo json_encode($result);
+
+    }
+);
+
+
+
+
+$app->get(
     '/manifest/:repo_id/:rev',
     function ($repo_id, $rev) use ($app) {
 

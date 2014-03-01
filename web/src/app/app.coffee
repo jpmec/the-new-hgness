@@ -57,6 +57,20 @@ appModule.factory 'Repo', () ->
 
 
 
+appModule.factory 'RepoFiles', () ->
+  object:
+    value: null
+
+
+
+
+appModule.factory 'RepoLogs', () ->
+  object:
+    value: null
+
+
+
+
 appModule.factory 'File', () ->
   object:
     value: null
@@ -147,6 +161,74 @@ appModule.service 'RepoService', ($http, Repo, Requesting) ->
 
     .error (data, status, headers, config) ->
       Repo.object.value = null
+
+      Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
+  return
+
+
+
+
+appModule.service 'RepoFilesService', ($http, RepoFiles, Requesting) ->
+
+  @url = 'api/0/repo_files/'
+
+  @get = (repoId, onSuccess, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(@url + repoId)
+    .success (data, status, headers, config) ->
+      RepoFiles.object.value = data
+
+      Requesting.object.value = false
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      RepoFiles.object.value = null
+
+      Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
+  return
+
+
+
+
+appModule.service 'RepoLogsService', ($http, RepoLogs, Requesting) ->
+
+  @url = 'api/0/repo_logs/'
+
+  @get = (repoId, onSuccess, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(@url + repoId)
+    .success (data, status, headers, config) ->
+      RepoLogs.object.value = data
+
+      Requesting.object.value = false
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      RepoLogs.object.value = null
 
       Requesting.object.value = false
 
@@ -499,6 +581,114 @@ appModule.controller 'RepoCtrl',
 
   $scope.selectTab = (tab) ->
     $location.search('active', tab)
+
+
+  if $scope.repoId
+    $scope.get($scope.repoId)
+
+  return
+
+
+
+
+appModule.controller 'RepoFilesCtrl',
+($scope, $location, $routeParams, $timeout, RepoFiles, RepoFilesService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.repoFiles = RepoFiles.object
+
+
+  $scope.showFiles = {
+    'clean': true
+    'ignored': true
+    'modified': true
+    'added': true
+    'removed': true
+    'missing': true
+    'untracked': true
+  }
+
+  $scope.fileFilterClass = {
+    'clean':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'ignored':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'modified':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'added':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'removed':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'missing':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+    'untracked':
+      'icon': 'fa fa-fw fa-eye'
+      'button': 'btn active'
+  }
+
+
+  $scope.get = (repoId) ->
+    RepoFilesService.get(repoId)
+
+
+  $scope.fileStatusFilter = (f) ->
+    $scope.showFiles[f.status]
+
+
+  $scope.toggleFileFilter = (key) ->
+    $scope.showFiles[key] = not $scope.showFiles[key]
+
+    if $scope.showFiles[key]
+      $scope.fileFilterClass[key].icon = 'fa fa-fw fa-eye'
+      $scope.fileFilterClass[key].button = 'btn active'
+    else
+      $scope.fileFilterClass[key].icon = 'fa fa-fw fa-eye-slash'
+      $scope.fileFilterClass[key].button = 'btn'
+
+
+  $scope.countStatus = (status) ->
+
+    if $scope.repoFiles.value
+      statuses = _.pluck($scope.repoFiles.value.status, 'status')
+
+      count = {}
+
+      _.forEach statuses, (status) ->
+        if status of count
+          count[status] = count[status] + 1
+        else
+          count[status] = 1
+      , count
+
+      if status of count
+        return count[status]
+      else
+        return 0
+    else
+      return 0
+
+
+  if $scope.repoId
+    $scope.get($scope.repoId)
+
+  return
+
+
+
+
+appModule.controller 'RepoLogsCtrl',
+($scope, $location, $routeParams, $timeout, RepoLogs, RepoLogsService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.repo = RepoLogs.object
+
+
+  $scope.get = (repoId) ->
+    RepoLogsService.get(repoId)
 
 
   if $scope.repoId

@@ -1,9 +1,9 @@
-<div ng-controller="RepoCtrl" ng-cloak>
+<div ng-controller="RepoFilesCtrl" ng-cloak>
 
   <div ng-controller="RequestingCtrl" ng-hide="requesting.value">
     <h1>
-      <a href="#/repo/{{repo.value.id}}">
-        <i class="fa fa-folder-open fa-fw"></i> {{repo.value.id}}
+      <a href="#/repo/{{repoFiles.value.id}}">
+        <i class="fa fa-folder-open fa-fw"></i> {{repoFiles.value.id}}
       </a>
     </h1>
     <hr>
@@ -33,7 +33,7 @@
 
     <p>&nbsp;</p>
 
-    <hg-status repo="repo.value.id" status="repo.value.status" status-filter="fileStatusFilter"></hg-status>
+    <hg-status repo="repoFiles.value.id" status="repoFiles.value.status" status-filter="fileStatusFilter"></hg-status>
 
   </div>
 
