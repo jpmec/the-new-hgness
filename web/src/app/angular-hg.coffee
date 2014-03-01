@@ -169,6 +169,38 @@ m.directive 'hgLog', ($filter) ->
 
 
 
+m.directive 'hgLogSearch', ($filter) ->
+
+  restrict: "E"
+  replace: true
+  template: """
+  <form class="form-inline form-search" role="search">
+    <div class="form-group">
+      <label class="sr-only" for="hgLogSearchKeyword">Keyword</label>
+      <input type="text" class="form-control" id="hgLogSearchKeyword" placeholder="Keyword">
+    </div>
+    <button type="submit" class="btn btn-default">Search</button>
+  </form>
+  """
+  scope:
+    repo: '=repo'
+    log: '=log'
+
+
+m.directive 'hgLogPagination', ($filter) ->
+  restrict: "E"
+  replace: true
+  template: """
+  <div>
+  <pagination total-items="10" page="1"></pagination>
+  </div>
+  """
+  scope:
+    repo: '=repo'
+    log: '=log'
+
+
+
 m.directive 'hgManifest', ($filter) ->
 
   restrict: "E"

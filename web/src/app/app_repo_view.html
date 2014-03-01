@@ -8,7 +8,7 @@
 
     <tabset>
 
-      <tab heading="Overview" active="tabs.overview.active">
+      <tab heading="Overview" active="tabs.overview.active" select="selectTab('overview')">
         <h2><i class="fa fa-code-fork fa-fw"></i> {{repo.value.branchesCount}} Branches</h2>
         <pre>{{repo.value.branches}}</pre>
 
@@ -20,7 +20,7 @@
 
       </tab>
 
-      <tab heading="{{repo.value.statusCount}} Files" active="tabs.files.active">
+      <tab heading="{{repo.value.statusCount}} Files" active="tabs.files.active" select="selectTab('files')">
         <p>&nbsp;</p>
 
         <button ng-class="fileFilterClass.clean.button" ng-click="toggleFileFilter('clean')" ng-show="countStatus('clean')">
@@ -50,8 +50,10 @@
         <hg-status repo="repo.value.id" status="repo.value.status" status-filter="fileStatusFilter"></hg-status>
       </tab>
 
-      <tab heading="{{repo.value.logCount}} Logs" active="tabs.logs.active">
+      <tab heading="{{repo.value.logCount}} Logs" active="tabs.logs.active" select="selectTab('logs')">
         <p>&nbsp;</p>
+        <hg-log-search repo="repo.value.id" log="repo.value.log"></hg-log-search>
+        <hg-log-pagination repo="repo.value.id" log="repo.value.log"></hg-log-pagination>
         <hg-log repo="repo.value.id" log="repo.value.log"></hg-log>
       </tab>
 

@@ -21,6 +21,10 @@ appModule.config ($routeProvider) ->
     templateUrl: 'app/app_repos_view.html'
   ).when('/repo/:repoId',
     templateUrl: 'app/app_repo_view.html'
+  ).when('/repo/files/:repoId',
+    templateUrl: 'app/app_repo_files_view.html'
+  ).when('/repo/logs/:repoId',
+    templateUrl: 'app/app_repo_logs_view.html'
   ).when('/diff/change/:repoId/:changeId',
     templateUrl: 'app/app_diff_view.html'
   ).when('/file/:repoId/:fileName',
@@ -402,7 +406,7 @@ appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
 
 
 appModule.controller 'RepoCtrl',
-($scope, $routeParams, $timeout, Repo, RepoService) ->
+($scope, $location, $routeParams, $timeout, Repo, RepoService) ->
   $scope.repoId = $routeParams.repoId
   $scope.repo = Repo.object
 
@@ -492,6 +496,9 @@ appModule.controller 'RepoCtrl',
     else
       return 0
 
+
+  $scope.selectTab = (tab) ->
+    $location.search('active', tab)
 
 
   if $scope.repoId

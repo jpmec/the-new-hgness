@@ -169,6 +169,18 @@ function hg_diff($options)
 
 
 
+function hg_identify($options)
+{
+    $cli = hg_cli('identify', $options);
+
+    $hg = shell_exec($cli);
+
+    return $hg;
+}
+
+
+
+
 function hg_log($options)
 {
     $cli = hg_cli('log', $options);
@@ -191,6 +203,14 @@ function hg_log($options)
             if ($key == "date")
             {
                 $log[$key] = strtotime($value) * 1000;
+            }
+            elseif ($key == "changeset")
+            {
+                $parts = explode(':', $value);
+
+                $log['rev'] = trim($parts[0]);
+                $log['nodeid'] = trim($parts[1]);
+                $log[$key] = $value;
             }
             else
             {
