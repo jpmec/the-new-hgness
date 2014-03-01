@@ -1,0 +1,13 @@
+TODO
+====
+
+Make first log value not link to diff (diff is blank for first commit).
+-----------------------------------------------------------------------
+
+
+Implement log keyword search.
+-----------------------------
+
+
+Update query parameters when user selects repo tab.
+---------------------------------------------------
