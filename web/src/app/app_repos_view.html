@@ -5,7 +5,7 @@
 
   <div class="row">
     <div ng-repeat="repo in repos.value | orderBy:'log.date'">
-      <div class="col-md-4">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
           <h2>
             <a ng-href="#/repo/{{repo.projectName}}"
             tooltip="{{repo.summary.branch}} {{repo.summary.parent}}">
