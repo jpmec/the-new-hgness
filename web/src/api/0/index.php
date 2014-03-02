@@ -11,7 +11,7 @@ require 'Slim/Slim.php';
 
 
 $app = new \Slim\Slim();
-$app->response->headers->set('Content-Type', 'application/json');
+$app->response->headers->set('Content-Type', 'application/json; charset=UTF-8');
 
 
 $app->config(array(
