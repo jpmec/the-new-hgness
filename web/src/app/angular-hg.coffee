@@ -139,7 +139,7 @@ m.directive 'hgLog', ($filter) ->
       <th>Summary</th>
     </thead>
     <tbody>
-      <tr ng-repeat="logItem in log">
+      <tr class="animate" ng-repeat="logItem in log">
         <td>
           <span class="label label-info" ng-show="logItem.tag">
             <i class="fa fa-tag fa-fw"></i> {{logItem.tag}}
@@ -174,17 +174,27 @@ m.directive 'hgLogSearch', ($filter) ->
   restrict: "E"
   replace: true
   template: """
-  <form class="form-inline form-search" role="search">
-    <div class="form-group">
-      <label class="sr-only" for="hgLogSearchKeyword">Keyword</label>
-      <input type="text" class="form-control" id="hgLogSearchKeyword" placeholder="Keyword">
-    </div>
-    <button type="submit" class="btn btn-default">Search</button>
-  </form>
+  <div>
+    <form class="form-inline form-search" role="search">
+      <div class="form-group">
+        <label class="sr-only" for="hgLogSearchKeyword">Keyword</label>
+        <input type="text"
+        class="form-control"
+        id="hgLogSearchKeyword"
+        placeholder="Keyword"
+        ng-model="searchInput">
+      </div>
+      <button type="submit" class="btn btn-default" ng-click="onSearch(searchInput)">
+        Search
+      </button>
+    </form>
+  </div>
   """
   scope:
     repo: '=repo'
     log: '=log'
+    searchInput: '=searchInput'
+    onSearch: '=onSearch'
 
 
 

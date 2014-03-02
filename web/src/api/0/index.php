@@ -197,15 +197,25 @@ $app->get(
             $rev = 'tip:0';
         }
 
+        $keywords = $app->request()->get('keywords');
+
         $tip = hg_log(array(
             "--cwd" => $dir,
             "--rev" => 'tip'
         ));
 
-        $log = hg_log(array(
+
+        $options = array(
             "--cwd" => $dir,
             "--rev" => $rev
-        ));
+        );
+
+        if (!is_null($keywords))
+        {
+            $options["--keyword"] = $keywords;
+        }
+
+        $log = hg_log($options);
 
         $result = array(
             "id" => $repo_id,

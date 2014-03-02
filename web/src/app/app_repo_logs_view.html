@@ -8,7 +8,12 @@
     </h1>
     <hr>
 
-    <hg-log-search repo="repoLogs.value.id" log="repoLogs.value.log"></hg-log-search>
+    <hg-log-search repo="repoLogs.value.id"
+    log="repoLogs.value.log"
+    search-input="searchInput"
+    on-search="onSearch"
+    >
+    </hg-log-search>
     <hg-log-pagination repo="repoLogs.value.id"
     log-count="repoLogs.value.tip.rev"
     log-page="page"

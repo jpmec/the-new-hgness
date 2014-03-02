@@ -246,6 +246,32 @@ appModule.service 'RepoLogsService', ($http, RepoLogs, Requesting) ->
 
       return
 
+
+  @search = (repoId, keywords, onSuccess, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(@url + repoId + '?' + 'keywords=' + keywords)
+    .success (data, status, headers, config) ->
+      RepoLogs.object.value = data
+
+      Requesting.object.value = false
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      RepoLogs.object.value = null
+
+      Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
   return
 
 
@@ -742,6 +768,8 @@ appModule.controller 'RepoLogsCtrl',
   $scope.page = 1
   $scope.itemsPerPage = 10
 
+  $scope.searchInput = null
+
 
   $scope.get = () ->
     offset = ($scope.page - 1) * $scope.itemsPerPage + 1
@@ -752,6 +780,10 @@ appModule.controller 'RepoLogsCtrl',
   $scope.onSelectPage = (page) ->
     $scope.page = page
     $scope.get()
+
+
+  $scope.onSearch = (keywords) ->
+    RepoLogsService.search($scope.repoId, keywords)
 
 
   if $scope.repoId
