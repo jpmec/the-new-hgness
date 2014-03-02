@@ -245,6 +245,72 @@ function hg_log($options)
 
 
 
+function hg_manifest($options)
+{
+    $cli = hg_cli('manifest', $options);
+
+    $hg = shell_exec($cli);
+
+    return $hg;
+}
+
+
+
+
+function hg_status($options)
+{
+    $cli = hg_cli('status', $options);
+
+    $hg = shell_exec($cli);
+
+    $lines = explode(PHP_EOL, $hg);
+
+    $result = array();
+    foreach ($lines as $line)
+    {
+        if (0 < strlen($line))
+        {
+            $status_array = array();
+
+            $parts = explode(' ', $line, 2);
+
+            $status = trim($parts[0]);
+            $filename = trim($parts[1]);
+
+            $status_array['filename'] = $filename;
+
+            if ($status == 'C') {
+                $status_array['status'] = 'clean';
+            }
+            elseif ($status == 'M') {
+                $status_array['status'] = 'modified';
+            }
+            elseif ($status == 'A') {
+                $status_array['status'] = 'added';
+            }
+            elseif ($status == 'R') {
+                $status_array['status'] = 'removed';
+            }
+            elseif ($status == 'I') {
+                $status_array['status'] = 'ignored';
+            }
+            elseif ($status == '!') {
+                $status_array['status'] = 'missing';
+            }
+            elseif ($status == '?') {
+                $status_array['status'] = 'untracked';
+            }
+
+            $result[] = $status_array;
+        }
+    }
+
+    return $result;
+}
+
+
+
+
 function hg_summary($options)
 {
     $cli = hg_cli('summary', $options);
@@ -281,9 +347,9 @@ function hg_summary($options)
 
 
 
-function hg_manifest($options)
+function hg_tags($options)
 {
-    $cli = hg_cli('manifest', $options);
+    $cli = hg_cli('tags', $options);
 
     $hg = shell_exec($cli);
 
@@ -293,61 +359,9 @@ function hg_manifest($options)
 
 
 
-function hg_status($options)
+function hg_verify($options)
 {
-    $cli = hg_cli('status', $options);
-
-    $hg = shell_exec($cli);
-
-    $lines = explode(PHP_EOL, $hg);
-
-    $result = array();
-    foreach ($lines as $line)
-    {
-        if (0 < strlen($line))
-        {
-            $parts = explode(' ', $line, 2);
-
-            $status = trim($parts[0]);
-            $filename = trim($parts[1]);
-
-            $status_array = array('filename' => $filename);
-
-            if ($status == 'C') {
-                $status_array['status'] = 'clean';
-            }
-            elseif ($status == 'M') {
-                $status_array['status'] = 'modified';
-            }
-            elseif ($status == 'A') {
-                $status_array['status'] = 'added';
-            }
-            elseif ($status == 'R') {
-                $status_array['status'] = 'removed';
-            }
-            elseif ($status == 'I') {
-                $status_array['status'] = 'ignored';
-            }
-            elseif ($status == '!') {
-                $status_array['status'] = 'missing';
-            }
-            elseif ($status == '?') {
-                $status_array['status'] = 'untracked';
-            }
-
-            $result[] = $status_array;
-        }
-    }
-
-    return $result;
-}
-
-
-
-
-function hg_tags($options)
-{
-    $cli = hg_cli('tags', $options);
+    $cli = hg_cli('verify', $options);
 
     $hg = shell_exec($cli);
 
