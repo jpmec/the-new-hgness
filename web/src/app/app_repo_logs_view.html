@@ -1,16 +1,21 @@
 <div ng-controller="RepoLogsCtrl" ng-cloak>
 
-  <div ng-controller="RequestingCtrl" ng-hide="requesting.value">
+  <div ng-controller="RequestingCtrl">
     <h1>
-      <a href="#/repo/{{repo.value.id}}">
-        <i class="fa fa-folder-open fa-fw"></i> {{repo.value.id}}
+      <a href="#/repo/{{repoLogs.value.id}}">
+        <i class="fa fa-folder-open fa-fw"></i> {{repoLogs.value.id}}
       </a>
     </h1>
     <hr>
 
-    <hg-log-search repo="repo.value.id" log="repo.value.log"></hg-log-search>
-    <hg-log-pagination repo="repo.value.id" log="repo.value.log"></hg-log-pagination>
-    <hg-log repo="repo.value.id" log="repo.value.log"></hg-log>
+    <hg-log-search repo="repoLogs.value.id" log="repoLogs.value.log"></hg-log-search>
+    <hg-log-pagination repo="repoLogs.value.id"
+    log-count="repoLogs.value.tip.rev"
+    log-page="page"
+    items-per-page="itemsPerPage"
+    on-select-page="onSelectPage">
+    </hg-log-pagination>
+    <hg-log repo="repoLogs.value.id" log="repoLogs.value.log"></hg-log>
 
   </div>
 

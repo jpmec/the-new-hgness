@@ -189,7 +189,7 @@ function hg_log($options)
 
     $lines = explode(PHP_EOL, $hg);
 
-    $result = '';
+    $result = array();
     $log = array();
     foreach ($lines as $line)
     {
@@ -227,7 +227,19 @@ function hg_log($options)
         }
     }
 
-    return $result;
+    $resultCount = count($result);
+    if (0 == $resultCount)
+    {
+        return null;
+    }
+    elseif(1 == $resultCount)
+    {
+        return $result[0];
+    }
+    else
+    {
+        return $result;
+    }
 }
 
 

@@ -71,6 +71,13 @@ appModule.factory 'RepoLogs', () ->
 
 
 
+appModule.factory 'RepoTip', () ->
+  object:
+    value: null
+
+
+
+
 appModule.factory 'File', () ->
   object:
     value: null
@@ -212,11 +219,13 @@ appModule.service 'RepoLogsService', ($http, RepoLogs, Requesting) ->
 
   @url = 'api/0/repo_logs/'
 
-  @get = (repoId, onSuccess, onError) ->
+  @get = (repoId, offset, count, onSuccess, onError) ->
+
+    rev = '-' + offset + ':' + '-' + (offset + count - 1)
 
     Requesting.object.value = true
 
-    $http.get(@url + repoId)
+    $http.get(@url + repoId + '?' + 'rev=' + rev)
     .success (data, status, headers, config) ->
       RepoLogs.object.value = data
 
@@ -231,6 +240,34 @@ appModule.service 'RepoLogsService', ($http, RepoLogs, Requesting) ->
       RepoLogs.object.value = null
 
       Requesting.object.value = false
+
+      if onError
+        onError()
+
+      return
+
+  return
+
+
+
+
+appModule.service 'RepoTipService', ($http, RepoTip) ->
+
+  @url = 'api/0/repo_tip/'
+
+  @get = (repoId, onSuccess, onError) ->
+
+    $http.get(@url + repoId + '?' + 'rev=tip')
+    .success (data, status, headers, config) ->
+      RepoTip.object.value = data
+
+      if onSuccess
+        onSuccess()
+
+      return
+
+    .error (data, status, headers, config) ->
+      RepoTip.object.value = null
 
       if onError
         onError()
@@ -681,18 +718,44 @@ appModule.controller 'RepoFilesCtrl',
 
 
 
+appModule.controller 'RepoTipCtrl',
+($scope, $location, $routeParams, $timeout, RepoTip, RepoTipService) ->
+  $scope.repoId = $routeParams.repoId
+  $scope.repoTip = RepoTip.object
+
+  $scope.get = () ->
+    RepoTipService.get($scope.repoId)
+
+  if $scope.repoId
+    $scope.get()
+
+  return
+
+
+
+
 appModule.controller 'RepoLogsCtrl',
 ($scope, $location, $routeParams, $timeout, RepoLogs, RepoLogsService) ->
   $scope.repoId = $routeParams.repoId
-  $scope.repo = RepoLogs.object
+  $scope.repoLogs = RepoLogs.object
+
+  $scope.page = 1
+  $scope.itemsPerPage = 10
 
 
-  $scope.get = (repoId) ->
-    RepoLogsService.get(repoId)
+  $scope.get = () ->
+    offset = ($scope.page - 1) * $scope.itemsPerPage + 1
+    count = $scope.itemsPerPage
+    RepoLogsService.get($scope.repoId, offset, count)
+
+
+  $scope.onSelectPage = (page) ->
+    $scope.page = page
+    $scope.get()
 
 
   if $scope.repoId
-    $scope.get($scope.repoId)
+    $scope.get()
 
   return
 

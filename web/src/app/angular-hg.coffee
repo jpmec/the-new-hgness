@@ -187,17 +187,30 @@ m.directive 'hgLogSearch', ($filter) ->
     log: '=log'
 
 
+
+
 m.directive 'hgLogPagination', ($filter) ->
   restrict: "E"
   replace: true
   template: """
   <div>
-  <pagination total-items="10" page="1"></pagination>
+    <pagination total-items="logCount"
+    page="logPage"
+    items-per-page="itemsPerPage"
+    max-size="10"
+    boundary-links="true"
+    rotate="false"
+    on-select-page="onSelectPage(page)">
+    </pagination>
   </div>
   """
   scope:
     repo: '=repo'
-    log: '=log'
+    logPage: '=logPage'
+    logCount: '=logCount'
+    itemsPerPage: '=itemsPerPage'
+    onSelectPage: '=onSelectPage'
+
 
 
 

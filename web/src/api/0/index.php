@@ -189,19 +189,29 @@ $app->get(
     function ($repo_id) use ($app) {
 
         $root_dir = $app->config('root');
-
         $dir = $root_dir . $repo_id;
 
+        $rev = $app->request()->get('rev');
+        if (is_null($rev))
+        {
+            $rev = 'tip:0';
+        }
 
-
-        $log = hg_log(array(
-            "--cwd" => $dir
+        $tip = hg_log(array(
+            "--cwd" => $dir,
+            "--rev" => 'tip'
         ));
 
+        $log = hg_log(array(
+            "--cwd" => $dir,
+            "--rev" => $rev
+        ));
 
         $result = array(
             "id" => $repo_id,
+            "tip" => $tip,
             "log" => $log,
+            "rev" => $rev,
             "logCount" => count($log)
         );
 
