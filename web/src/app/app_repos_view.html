@@ -7,26 +7,39 @@
     <div ng-repeat="repo in repos.value | orderBy:'log.date'">
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
           <div class="panel panel-default">
-            <div class="panel-body">
+            <div class="panel-heading">
               <h2>
                 <a ng-href="#/repo/{{repo.projectName}}"
                 tooltip="{{repo.summary.branch}} {{repo.summary.parent}}">
                   <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
                 </a>
-              </h2>
 
-              <h4>
-                <a ng-href="#/diff/change/{{repo.projectName}}/{{log.changeset}}">
-                  {{prettyDate(repo.log.date)}} by {{prettyName(repo.log.user)}}
+                <a class="btn btn-default" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
+                  <i class="fa fa-fw fa-files-o"></i>
                 </a>
-              </h4>
-              <pre>{{repo.log.summary}}</pre>
 
-              <div class="alert alert-info" ng-show="repo.summary.commit != '(clean)'">
+                <a class="btn btn-default" href="#/repo/logs/{{repo.projectName}}" tooltip="Logs">
+                  <i class="fa fa-fw fa-list"></i>
+                </a>
+              </h2>
+            </div>
+            <div class="panel-body">
+
+
+              <div ng-show="repo.log">
+                <h4>
+                  <a ng-href="#/diff/change/{{repo.projectName}}/{{log.changeset}}">
+                    {{prettyDate(repo.log.date)}} by {{prettyName(repo.log.user)}}
+                  </a>
+                </h4>
+                <pre>{{repo.log.summary}}</pre>
+              </div>
+
+              <div class="alert alert-info" ng-show="repo.summary.commit && repo.summary.commit != '(clean)'">
                   <p><b>Commit</b> {{repo.summary.commit}}</p>
               </div>
 
-              <div class="alert alert-info" ng-show="repo.summary.update != '(current)'">
+              <div class="alert alert-info" ng-show="repo.summary.update && repo.summary.update != '(current)'">
                   <p><b>Update</b> {{repo.summary.update}}</p>
               </div>
             </div>

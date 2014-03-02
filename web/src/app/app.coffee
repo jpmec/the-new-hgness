@@ -531,10 +531,12 @@ appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
 
 
   $scope.prettyDate = (datestr) ->
+    return '' if not datestr
     moment(datestr).fromNow()
 
 
   $scope.prettyName = (namestr) ->
+    return '' if not namestr
     match = namestr.match /(.+) <(\w+@\w+\.\w+)>/
 
     if match
