@@ -5,57 +5,60 @@
  -->
   <div class="row">
     <div ng-repeat="repo in repos.value | orderBy:'log.date':true ">
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-          <div class="panel {{repoPanelStyle(repo)}}">
-            <div class="panel-heading">
-              <h2>
-                <span ng-show="repo.log">
-                  <a ng-href="#/repo/{{repo.projectName}}"
-                  tooltip="{{repo.summary.branch}} {{repo.summary.parent}}">
-                    <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
-                  </a>
-                </span>
+      <div ng-show='repo.log'>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="panel {{repoPanelStyle(repo)}}">
+              <div class="panel-heading">
 
-                <span ng-hide="repo.log">
-                  <a ng-href="#/repo/{{repo.projectName}}">
-                    <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
-                  </a>
-                </span>
+                <h2>
+                  <span ng-show="repo.log">
+                    <a ng-href="#/repo/{{repo.projectName}}"
+                    tooltip="{{repo.summary.branch}} {{repo.summary.parent}}">
+                      <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
+                    </a>
+                  </span>
 
-                <span ng-show="repo.log">
-                  <a class="btn btn-default" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
-                    <i class="fa fa-fw fa-files-o"></i>
-                  </a>
-                </span>
+                  <span ng-hide="repo.log">
+                    <a ng-href="#/repo/{{repo.projectName}}">
+                      <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
+                    </a>
+                  </span>
 
-                <span ng-show="repo.log">
-                  <a class="btn btn-default" href="#/repo/logs/{{repo.projectName}}" tooltip="Logs">
-                    <i class="fa fa-fw fa-list"></i>
-                  </a>
-                </span>
-              </h2>
+                  <span ng-show="repo.log">
+                    <a class="btn btn-default" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
+                      <i class="fa fa-fw fa-files-o"></i>
+                    </a>
+                  </span>
+
+                  <span ng-show="repo.log">
+                    <a class="btn btn-default" href="#/repo/logs/{{repo.projectName}}" tooltip="Logs">
+                      <i class="fa fa-fw fa-list"></i>
+                    </a>
+                  </span>
+                </h2>
+              </div>
+              <div class="panel-body">
+
+
+                <div ng-show="repo.log">
+                  <h4>
+                    <a ng-href="#/diff/change/{{repo.projectName}}/{{repo.log.changeset}}">
+                      {{prettyDate(repo.log.date)}} by {{prettyName(repo.log.user)}}
+                    </a>
+                  </h4>
+                  <pre>{{repo.log.summary}}</pre>
+                </div>
+
+                <div class="alert alert-info" ng-show="repo.summary.commit && repo.summary.commit != '(clean)'">
+                    <p><b>Commit</b> {{repo.summary.commit}}</p>
+                </div>
+
+                <div class="alert alert-info" ng-show="repo.summary.update && repo.summary.update != '(current)'">
+                    <p><b>Update</b> {{repo.summary.update}}</p>
+                </div>
+              </div>
             </div>
-            <div class="panel-body">
-
-
-              <div ng-show="repo.log">
-                <h4>
-                  <a ng-href="#/diff/change/{{repo.projectName}}/{{repo.log.changeset}}">
-                    {{prettyDate(repo.log.date)}} by {{prettyName(repo.log.user)}}
-                  </a>
-                </h4>
-                <pre>{{repo.log.summary}}</pre>
-              </div>
-
-              <div class="alert alert-info" ng-show="repo.summary.commit && repo.summary.commit != '(clean)'">
-                  <p><b>Commit</b> {{repo.summary.commit}}</p>
-              </div>
-
-              <div class="alert alert-info" ng-show="repo.summary.update && repo.summary.update != '(current)'">
-                  <p><b>Update</b> {{repo.summary.update}}</p>
-              </div>
-            </div>
-          </div>
+        </div>
       </div>
     </div>
   </div>
