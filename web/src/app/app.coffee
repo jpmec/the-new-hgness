@@ -519,7 +519,7 @@ appModule.controller 'RequestingCtrl', ($scope, Requesting) ->
 
 appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
   $scope.repos = Repos.object
-  $scope.timeoutMilliseconds = (1) * (60) * (1000)
+  $scope.timeoutMilliseconds = (10) * (60) * (1000)
 
 
   $scope.get = () ->
@@ -545,6 +545,12 @@ appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
     else
       namestr
 
+
+  $scope.repoPanelStyle = (repo) ->
+    if repo.log
+      'panel-default'
+    else
+      'panel-danger'
 
   $scope.get()
   return

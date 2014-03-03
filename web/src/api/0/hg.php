@@ -60,9 +60,19 @@ function hg_cat($options, $file)
 
     $hg = shell_exec($cli);
 
-    $lines = explode(PHP_EOL, $hg);
+    $result = array();
 
-    $result = array('lines' => $lines);
+    $result['length'] = mb_strlen($hg, 'UTF-8');
+
+    if (0 == $result['length'])
+    {
+        $result['lines'] = null;
+    }
+    else
+    {
+        $lines = explode(PHP_EOL, $hg);
+        $result['lines'] = $lines;
+    }
 
     return $result;
 }

@@ -108,17 +108,25 @@ m.directive 'hgFile', ($filter) ->
 
   template: """
   <div class="panel panel-default">
+    <div class="panel-heading">
+      <span class="panel-title"><b>{{file.name}}</b></span> ({{file.length}} characters)
+    </div>
     <div class="panel-body">
-      <table class="table-hover">
-        <tr ng-repeat="line in file.lines track by $index">
-          <td>
-            <span class="angular-hg-file-line-number">{{$index}}</span>
-          </td>
-          <td>
-            <span class="angular-hg-file-line">{{line}}</span>
-          </td>
-        </tr>
-      </table>
+      <div ng-show="file.lines">
+        <table class="table-hover">
+          <tr ng-repeat="line in file.lines track by $index">
+            <td>
+              <span class="angular-hg-file-line-number">{{$index}}</span>
+            </td>
+            <td>
+              <span class="angular-hg-file-line">{{line}}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="alert alert-info" ng-show="!file.lines">
+        <p><i>File is empty</i></p>
+      </div>
     </div>
   </div>
   """
@@ -309,6 +317,8 @@ m.directive 'hgSummaryUpdateAlert', ($filter) ->
   """
   scope:
     summary: '=summary'
+
+
 
 
 m.filter 'hgUser', () ->
