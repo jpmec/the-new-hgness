@@ -40,7 +40,7 @@ $app->get(
             "diff" => $hg
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
     }
 );
 
@@ -83,7 +83,7 @@ $app->get(
             );
         }
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
@@ -149,7 +149,7 @@ $app->get(
             "logCount" => count($log)
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
@@ -176,7 +176,7 @@ $app->get(
             "statusCount" => count($status)
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
@@ -253,7 +253,7 @@ $app->get(
             "manifest" => $hg
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
@@ -291,7 +291,7 @@ $app->get(
 
         $result['file'] = array_merge($result['file'], $hg);
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
@@ -309,7 +309,7 @@ $app->get(
             "version" => $hg
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
