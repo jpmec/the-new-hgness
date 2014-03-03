@@ -11,3 +11,11 @@ Implement log keyword search.
 
 Update query parameters when user selects repo tab.
 ---------------------------------------------------
+
+
+* Untracked files in files view do not show contents.
+-----------------------------------------------------
+
+
+* Cancel ReposCtrl timer when different view is shown.
+------------------------------------------------------
