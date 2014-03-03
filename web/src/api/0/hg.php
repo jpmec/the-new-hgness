@@ -1,6 +1,7 @@
 <?php
 
 date_default_timezone_set('America/Chicago');
+putenv('LANG=en_US.UTF-8');
 
 
 function hg_cli($cmd, $options)
@@ -214,7 +215,7 @@ function hg_log($options)
             }
             else
             {
-                $log[$key] = $value;
+                $log[$key] = htmlentities($value);
             }
         }
         else

@@ -225,7 +225,7 @@ $app->get(
             "logCount" => count($log)
         );
 
-        echo json_encode($result);
+        echo html_entity_decode(json_encode($result));
 
     }
 );
