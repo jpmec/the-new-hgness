@@ -10,8 +10,8 @@
 
   <body>
 
-    <div class="container-fluid">
-      <?php include('index_navbar.php') ?>
+    <?php include('index_navbar.php') ?>
+    <div class="container">
 
       <ng-view></ng-view>
 
