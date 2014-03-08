@@ -47,6 +47,30 @@ $app->get(
 
 
 
+function get_hg_repo_info($path)
+{
+    $dir = dirname($path);
+    $project_name = basename($dir);
+
+    $log = hg_log(array(
+        "--cwd" => $dir,
+        "--limit" => 1
+    ));
+
+    $summary = hg_summary(array(
+        "--cwd" => $dir
+    ));
+
+    return array(
+        "projectName" => $project_name,
+        "dir" => $dir,
+        "summary" => $summary,
+        "log" => $log
+    );
+}
+
+
+
 
 $app->get(
     '/repos',
@@ -54,37 +78,41 @@ $app->get(
 
         $root_dir = $app->config('root');
 
+        $paths = glob($root_dir . "**/" . ".hg");
 
-        //$result = scandir($root_dir);
-
-        $fullpaths = glob($root_dir . "**/" . ".hg");
-
-        foreach ($fullpaths as $fullpath)
+        foreach ($paths as $path)
         {
-            $dir = dirname($fullpath);
-            $project_name = basename($dir);
-
-            $log = hg_log(array(
-                "--cwd" => $dir,
-                "--limit" => 1
-            ));
-
-
-
-            $summary = hg_summary(array(
-                "--cwd" => $dir
-            ));
-
-            $result[] = array(
-                "projectName" => $project_name,
-                "dir" => $dir,
-                "summary" => $summary,
-                "log" => $log
-            );
+            $result[] = get_hg_repo_info($path);
         }
 
         echo html_entity_decode(json_encode($result));
+    }
+);
 
+
+
+
+$app->get(
+    '/hot_repo',
+    function () use ($app) {
+
+        $root_dir = $app->config('root');
+
+        $paths = glob($root_dir . "**/" . ".hg");
+
+        $hot_time = null;
+        foreach ($paths as $path)
+        {
+            $time = filemtime($path);
+
+            if (!$hot_time or ($time > $hot_time))
+            {
+                $hot_time = $time;
+                $result = get_hg_repo_info($path);
+            }
+        }
+
+        echo html_entity_decode(json_encode($result));
     }
 );
 

@@ -29,6 +29,8 @@ appModule.config ($routeProvider) ->
     templateUrl: 'app/app_diff_view.html'
   ).when('/file/:repoId/:fileName',
     templateUrl: 'app/app_file_view.html'
+  ).when('/help',
+    templateUrl: 'app/app_help_view.html'
   ).when('/about',
     templateUrl: 'app/app_about_view.html'
   ).otherwise redirectTo: '/repos'
@@ -41,6 +43,9 @@ appModule.factory 'Requesting', () ->
     value: null
 
 
+appModule.factory 'Error', () ->
+  object:
+    value: null
 
 
 appModule.factory 'Repos', () ->
@@ -48,13 +53,9 @@ appModule.factory 'Repos', () ->
     value: null
 
 
-
-
 appModule.factory 'Repo', () ->
   object:
     value: null
-
-
 
 
 appModule.factory 'RepoFiles', () ->
@@ -62,13 +63,9 @@ appModule.factory 'RepoFiles', () ->
     value: null
 
 
-
-
 appModule.factory 'RepoLogs', () ->
   object:
     value: null
-
-
 
 
 appModule.factory 'RepoTip', () ->
@@ -76,6 +73,9 @@ appModule.factory 'RepoTip', () ->
     value: null
 
 
+appModule.factory 'HotRepo', () ->
+  object:
+    value: null
 
 
 appModule.factory 'File', () ->
@@ -83,13 +83,9 @@ appModule.factory 'File', () ->
     value: null
 
 
-
-
 appModule.factory 'Diff', () ->
   object:
     value: null
-
-
 
 
 appModule.factory 'StatusFilter', () ->
@@ -97,13 +93,9 @@ appModule.factory 'StatusFilter', () ->
     value: null
 
 
-
-
 appModule.factory 'Manifest', () ->
   object:
     value: null
-
-
 
 
 appModule.factory 'HgVersion', () ->
@@ -113,299 +105,167 @@ appModule.factory 'HgVersion', () ->
 
 
 
-appModule.service 'ReposService', ($http, Repos, Requesting) ->
+appModule.service 'HttpRequestService', ($http, Requesting) ->
+
+  @get = (url, response, onResponse, error, onError) ->
+
+    Requesting.object.value = true
+
+    $http.get(url)
+    .success (data, status, headers, config) ->
+      if error
+        error.value = null
+
+      response.value = data
+
+      if onResponse
+        onResponse()
+
+      Requesting.object.value = false
+      return
+
+    .error (data, status, headers, config) ->
+      response.value = null
+
+      if error
+        error.value = data
+
+      if onError
+        onError()
+
+      Requesting.object.value = false
+      return
+
+  return
+
+
+
+
+appModule.service 'ReposService', (HttpRequestService, Repos, Error) ->
 
   @url = 'api/0/repos'
 
   @get = (onSuccess, onError) ->
-
-    Requesting.object.value = true
-
-    $http.get(@url)
-    .success (data, status, headers, config) ->
-      Repos.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      Repos.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(@url, Repos.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'RepoService', ($http, Repo, Requesting) ->
+appModule.service 'RepoService', (HttpRequestService, Repo, Error) ->
 
   @url = 'api/0/repo/'
 
   @get = (repoId, onSuccess, onError) ->
-
-    Requesting.object.value = true
-
-    $http.get(@url + repoId)
-    .success (data, status, headers, config) ->
-      Repo.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      Repo.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(@url + repoId, Repo.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'RepoFilesService', ($http, RepoFiles, Requesting) ->
+appModule.service 'HotRepoService', (HttpRequestService, HotRepo, Error) ->
+
+  @url = 'api/0/hot_repo/'
+
+  @get = (onSuccess, onError) ->
+    HttpRequestService.get(@url, HotRepo.object, onSuccess, Error.object, onError)
+
+  return
+
+
+
+
+appModule.service 'RepoFilesService', (HttpRequestService, RepoFiles, Error) ->
 
   @url = 'api/0/repo_files/'
 
   @get = (repoId, onSuccess, onError) ->
-
-    Requesting.object.value = true
-
-    $http.get(@url + repoId)
-    .success (data, status, headers, config) ->
-      RepoFiles.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      RepoFiles.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(@url + repoId, RepoFiles.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'RepoLogsService', ($http, RepoLogs, Requesting) ->
+appModule.service 'RepoLogsService', (HttpRequestService, RepoLogs, Error) ->
 
   @url = 'api/0/repo_logs/'
 
   @get = (repoId, offset, count, onSuccess, onError) ->
 
     rev = '-' + offset + ':' + '-' + (offset + count - 1)
+    url = @url + repoId + '?' + 'rev=' + rev
 
-    Requesting.object.value = true
-
-    $http.get(@url + repoId + '?' + 'rev=' + rev)
-    .success (data, status, headers, config) ->
-      RepoLogs.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      RepoLogs.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(url, RepoLogs.object, onSuccess, Error.object, onError)
 
 
   @search = (repoId, keywords, onSuccess, onError) ->
 
-    Requesting.object.value = true
-
-    $http.get(@url + repoId + '?' + 'keywords=' + keywords)
-    .success (data, status, headers, config) ->
-      RepoLogs.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      RepoLogs.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    url = @url + repoId + '?' + 'keywords=' + keywords
+    HttpRequestService.get(url, RepoLogs.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'RepoTipService', ($http, RepoTip) ->
+appModule.service 'RepoTipService', (HttpRequestService, RepoTip, Error) ->
 
   @url = 'api/0/repo_tip/'
 
   @get = (repoId, onSuccess, onError) ->
 
-    $http.get(@url + repoId + '?' + 'rev=tip')
-    .success (data, status, headers, config) ->
-      RepoTip.object.value = data
+    url = @url + repoId + '?' + 'rev=tip'
 
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      RepoTip.object.value = null
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(url, RepoTip.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'DiffService', ($http, Diff, Requesting) ->
+appModule.service 'DiffService', (HttpRequestService, Diff, Error) ->
 
   @url = 'api/0/diff/'
 
   @getChange = (repoId, changeId, onSuccess, onError) ->
 
-    Requesting.object.value = true
-
-    $http.get(@url + 'change/' + repoId + '/' + changeId)
-    .success (data, status, headers, config) ->
-      Diff.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      Diff.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    url = @url + 'change/' + repoId + '/' + changeId
+    HttpRequestService.get(url, Diff.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'ManifestService', ($http, Manifest, Requesting) ->
+appModule.service 'ManifestService', (HttpRequestService, Manifest, Error) ->
 
   @url = 'api/0/manifest/'
 
   @get = (repoId, revId, onSuccess, onError) ->
 
-    Requesting.object.value = true
-
-    $http.get(@url + repoId + '/' + revId)
-    .success (data, status, headers, config) ->
-      Manifest.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      Manifest.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    url = @url + repoId + '/' + revId
+    HttpRequestService.get(url, Manifest.object, onSuccess, Error.object, onError)
 
   return
 
 
 
 
-appModule.service 'FileService', ($http, File, Requesting) ->
+appModule.service 'FileService', (HttpRequestService, File, Error) ->
 
   @url = 'api/0/file/'
 
   @get = (repoId, fileName, rev, onSuccess, onError) ->
-
-    Requesting.object.value = true
 
     url = @url + repoId + '/' + fileName
 
     if rev
       url += '?rev=' + rev
 
-    $http.get(url)
-    .success (data, status, headers, config) ->
-      File.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      File.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(url, File.object, onSuccess, Error.object, onError)
 
   return
 
@@ -413,34 +273,12 @@ appModule.service 'FileService', ($http, File, Requesting) ->
 
 
 
-appModule.service 'HgVersionService', ($http, HgVersion, Requesting) ->
+appModule.service 'HgVersionService', (HttpRequestService, HgVersion, Error) ->
 
   @url = 'api/0/hg_version'
 
   @get = (onSuccess, onError) ->
-
-    Requesting.object.value = true
-
-    $http.get(@url)
-    .success (data, status, headers, config) ->
-      HgVersion.object.value = data
-
-      Requesting.object.value = false
-
-      if onSuccess
-        onSuccess()
-
-      return
-
-    .error (data, status, headers, config) ->
-      HgVersion.object.value = null
-
-      Requesting.object.value = false
-
-      if onError
-        onError()
-
-      return
+    HttpRequestService.get(url, HgVersion.object, onSuccess, Error.object, onError)
 
   return
 
@@ -590,22 +428,22 @@ appModule.controller 'RepoCtrl',
       'button': 'btn active'
     'ignored':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
     'modified':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
     'added':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
     'removed':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
     'missing':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
     'untracked':
       'icon': 'fa fa-fw fa-eye'
-      'button': 'btn active'
+      'button': 'btn btn-sm active'
   }
 
 

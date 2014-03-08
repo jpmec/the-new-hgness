@@ -15,6 +15,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
+        <li class="divider"></li>
+        <li><a href="#/help"><i class="fa fa-fw fa-question-circle"></i> Help</a></li>
         <!-- <li><a href="#/repos"><i class="fa fa-fw fa-archive"></i> Repos</a></li> -->
       </ul>
 

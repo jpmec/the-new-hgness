@@ -1,8 +1,13 @@
-<div ng-controller="ReposCtrl">
 
-<!--   <h1><i class="fa fa-archive fa-fw"></i> Repos</h1>
-  <hr>
- -->
+<div ng-controller="ReposCtrl">
+  <div class="jumbotron" ng-show="repos.newest">
+    <h3 class="panel-title">
+      <a ng-href="#/repo/{{repos.newest.projectName}}">
+        <i class="fa fa-folder fa-fw"></i> {{repos.newest.projectName}}
+      </a>
+    </h3>
+  </div>
+
   <div class="row" ng-repeat="repo in repos.value | orderBy:'log.date':true">
     <div ng-show="repo.log">
       <div class="panel {{repoPanelStyle(repo)}}">
@@ -42,7 +47,7 @@
           </div>
         </div>
         <div class="panel-footer">
-          <span ng-show="repo.log">
+          <span class="pull-right" ng-show="repo.log">
             <a class="btn btn-default btn-xs" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
               <i class="fa fa-fw fa-files-o"></i>
             </a>
