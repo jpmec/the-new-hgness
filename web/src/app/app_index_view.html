@@ -20,27 +20,32 @@
         <span class="label label-default">
           <i class="fa fa-fw fa-code-fork"></i> {{hotRepo.value.summary.branch}}
         </span>
+        <span ng-show="hotRepo.value.summary.commit && hotRepo.value.summary.commit != '(clean)'">
+          &nbsp;<span class="label label-info">{{hotRepo.value.summary.commit}}</span>&nbsp;
+        </span>
+
+        <span ng-show="hotRepo.value.summary.update && hotRepo.value.summary.update != '(current)'">
+          &nbsp;<span class="label label-info">{{hotRepo.value.summary.update}}</span>&nbsp;
+        </span>
       </span>
     </p>
   </div>
   <div class="col-sm-2">
-    <div>
+    <p>
       <a class="btn btn-block btn-primary btn-lg" href="#/repo/logs/{{hotRepo.value.projectName}}">
         <i class="fa fa-fw fa-list"></i> Logs
       </a>
-    </div>
-    <h6>&nbsp;</h6>
-    <div ng-show="hotRepo.value.log">
+    </p>
+    <p ng-show="hotRepo.value.log">
       <a class="btn btn-block btn-primary btn-lg" href="#/repo/files/{{hotRepo.value.projectName}}">
         <i class="fa fa-fw fa-files-o"></i> Files
       </a>
-    </div>
-    <h6>&nbsp;</h6>
-    <div ng-show="hotRepo.value.log">
+    </p>
+    <p ng-show="hotRepo.value.log">
       <a class="btn btn-block btn-primary btn-lg" href="#/repo/tags/{{hotRepo.value.projectName}}">
         <i class="fa fa-fw fa-tags"></i> Tags
       </a>
-    </div>
+    </p>
   </div>
   <hr/>
 </div>
