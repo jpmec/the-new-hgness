@@ -17,7 +17,10 @@ appModule = angular.module 'TheNewHgnessApp', [
 
 
 appModule.config ($routeProvider) ->
-  $routeProvider.when('/repos',
+
+  $routeProvider.when('/',
+    templateUrl: 'app/app_index_view.html'
+  ).when('/repos',
     templateUrl: 'app/app_repos_view.html'
   ).when('/repo/:repoId',
     templateUrl: 'app/app_repo_view.html'
@@ -33,7 +36,7 @@ appModule.config ($routeProvider) ->
     templateUrl: 'app/app_help_view.html'
   ).when('/about',
     templateUrl: 'app/app_about_view.html'
-  ).otherwise redirectTo: '/repos'
+  ).otherwise redirectTo: '/'
 
 
 
@@ -146,7 +149,20 @@ appModule.service 'ReposService', (HttpRequestService, Repos, Error) ->
   @url = 'api/0/repos'
 
   @get = (onSuccess, onError) ->
-    HttpRequestService.get(@url, Repos.object, onSuccess, Error.object, onError)
+    url = @url + "?" + "count=3"
+    HttpRequestService.get(url, Repos.object, onSuccess, Error.object, onError)
+
+  return
+
+
+
+
+appModule.service 'HotRepoService', (HttpRequestService, HotRepo, Error) ->
+
+  @url = 'api/0/hot_repo'
+
+  @get = (onSuccess, onError) ->
+    HttpRequestService.get(@url, HotRepo.object, onSuccess, Error.object, onError)
 
   return
 
@@ -159,18 +175,6 @@ appModule.service 'RepoService', (HttpRequestService, Repo, Error) ->
 
   @get = (repoId, onSuccess, onError) ->
     HttpRequestService.get(@url + repoId, Repo.object, onSuccess, Error.object, onError)
-
-  return
-
-
-
-
-appModule.service 'HotRepoService', (HttpRequestService, HotRepo, Error) ->
-
-  @url = 'api/0/hot_repo/'
-
-  @get = (onSuccess, onError) ->
-    HttpRequestService.get(@url, HotRepo.object, onSuccess, Error.object, onError)
 
   return
 
@@ -396,6 +400,37 @@ appModule.controller 'ReposCtrl', ($scope, $timeout, Repos, ReposService) ->
 
 
 
+appModule.controller 'HotRepoCtrl',
+($scope, HotRepo, HotRepoService) ->
+  $scope.hotRepo = HotRepo.object
+
+
+  $scope.prettyDate = (datestr) ->
+    return '' if not datestr
+    moment(datestr).fromNow()
+
+
+  $scope.prettyName = (namestr) ->
+    return '' if not namestr
+    match = namestr.match /(.+) <(\w+@\w+\.\w+)>/
+
+    if match
+      # "<a ng-href='mailto:#{match[2]}'>#{match[1]}</a>"
+      match[1]
+    else
+      namestr
+
+
+  $scope.get = () ->
+    HotRepoService.get()
+
+
+  $scope.get()
+  return
+
+
+
+
 appModule.controller 'RepoCtrl',
 ($scope, $location, $routeParams, $timeout, Repo, RepoService) ->
   $scope.repoId = $routeParams.repoId
@@ -496,7 +531,6 @@ appModule.controller 'RepoCtrl',
     $scope.get($scope.repoId)
 
   return
-
 
 
 

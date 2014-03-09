@@ -1,6 +1,53 @@
+
+<div class="row" ng-controller="HotRepoCtrl" ng-show="hotRepo.value">
+  <div class="jumbotron col-sm-10">
+    <h1>
+      <a ng-href="#/repo/{{hotRepo.value.projectName}}">
+        <i class="fa fa-folder fa-fw"></i> {{hotRepo.value.projectName}}
+      </a>
+    </h1>
+    <hr/>
+    <p>
+      {{hotRepo.value.log.summary}}
+    </p>
+    <p>
+      <cite>
+        <a ng-href="#/diff/change/{{hotRepo.value.projectName}}/{{hotRepo.value.repo.log.changeset}}">
+          <span>{{prettyDate(hotRepo.value.log.date)}} </span><span>by {{prettyName(hotRepo.value.log.user)}}</span>
+        </a>
+      </cite>
+      <span class="pull-right">
+        <span class="label label-default">
+          <i class="fa fa-fw fa-code-fork"></i> {{hotRepo.value.summary.branch}}
+        </span>
+      </span>
+    </p>
+  </div>
+  <div class="col-sm-2">
+    <div>
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/logs/{{hotRepo.value.projectName}}">
+        <i class="fa fa-fw fa-list"></i> Logs
+      </a>
+    </div>
+    <h6>&nbsp;</h6>
+    <div ng-show="hotRepo.value.log">
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/files/{{hotRepo.value.projectName}}">
+        <i class="fa fa-fw fa-files-o"></i> Files
+      </a>
+    </div>
+    <h6>&nbsp;</h6>
+    <div ng-show="hotRepo.value.log">
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/tags/{{hotRepo.value.projectName}}">
+        <i class="fa fa-fw fa-tags"></i> Tags
+      </a>
+    </div>
+  </div>
+  <hr/>
+</div>
+
 <div class="row" ng-controller="ReposCtrl">
   <div ng-repeat="repo in repos.value | orderBy:'log.date':true">
-    <div ng-show="repo.log">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-show="repo.log">
       <div class="panel {{repoPanelStyle(repo)}}">
         <div class="panel-heading col-md-12">
           <h3 class="panel-title" ng-show="repo.log">
@@ -45,6 +92,10 @@
             <a class="btn btn-default btn-xs" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
               <i class="fa fa-fw fa-files-o"></i>
             </a>
+
+            <a class="btn btn-default btn-xs" href="#/repo/tags/{{repo.projectName}}" tooltip="Tags">
+              <i class="fa fa-fw fa-tags"></i>
+            </a>
           </span>
 
           <span class="label label-default">
@@ -55,6 +106,6 @@
     </div>
   </div>
   <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" ng-show="repos.value">
-    <h3>More...</h3>
+    <h3><a href="#/repos">More...</a></h3>
   </div>
 </div>

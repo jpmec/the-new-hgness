@@ -80,9 +80,22 @@ $app->get(
 
         $paths = glob($root_dir . "**/" . ".hg");
 
+        $c = 0;
+        $count = $app->request()->get('count');
+        if (is_null($count))
+        {
+            $count = INF;
+        }
+
         foreach ($paths as $path)
         {
             $result[] = get_hg_repo_info($path);
+
+            $c++;
+            if ($c >= $count)
+            {
+                break;
+            }
         }
 
         echo html_entity_decode(json_encode($result));
