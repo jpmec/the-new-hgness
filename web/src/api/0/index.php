@@ -25,9 +25,7 @@ $app->get(
     function ($repo_id, $change) use ($app) {
 
         $root_dir = $app->config('root');
-
         $dir = $root_dir . $repo_id;
-
 
         $hg = hg_diff(array(
             "--cwd" => $dir,
@@ -62,7 +60,7 @@ function get_hg_repo_info($path)
     ));
 
     return array(
-        "projectName" => $project_name,
+        "name" => $project_name,
         "dir" => $dir,
         "summary" => $summary,
         "log" => $log
@@ -80,6 +78,13 @@ $app->get(
 
         $paths = glob($root_dir . "**/" . ".hg");
 
+        $i = 0;
+        $index = $app->request()->get('request');
+        if (is_null($index))
+        {
+            $index = 0;
+        }
+
         $c = 0;
         $count = $app->request()->get('count');
         if (is_null($count))
@@ -89,7 +94,32 @@ $app->get(
 
         foreach ($paths as $path)
         {
-            $result[] = get_hg_repo_info($path);
+            if ($i < $index)
+            {
+                $i++;
+                continue;
+            }
+
+            $dir = dirname($path);
+
+            $repo = array('name' => basename($dir));
+
+            if (!is_null($app->request()->get('summary')))
+            {
+                $repo['summary'] = hg_summary(array(
+                    "--cwd" => $dir
+                ));
+            }
+
+            if (!is_null($app->request()->get('log')))
+            {
+                $repo['log'] = hg_log(array(
+                    "--cwd" => $dir,
+                    "--limit" => 1
+                ));
+            }
+
+            $result[] = $repo;
 
             $c++;
             if ($c >= $count)

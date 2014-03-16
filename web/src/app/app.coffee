@@ -149,7 +149,7 @@ appModule.service 'ReposService', (HttpRequestService, Repos, Error) ->
   @url = 'api/0/repos'
 
   @get = (onSuccess, onError) ->
-    url = @url + "?" + "count=3"
+    url = @url + "?" + "count=3" + "&summary" + "&log"
     HttpRequestService.get(url, Repos.object, onSuccess, Error.object, onError)
 
   return

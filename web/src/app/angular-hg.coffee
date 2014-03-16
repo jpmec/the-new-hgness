@@ -243,6 +243,61 @@ m.directive 'hgManifest', ($filter) ->
 
 
 
+m.directive 'hgReposSearch', ($filter) ->
+
+  restrict: "E"
+  replace: true
+  template: """
+  <div>
+    <form class="form-inline form-search" role="search">
+      <div class="form-group">
+        <label class="sr-only" for="hgReposSearchKeyword">Keyword</label>
+        <input type="text"
+        class="form-control"
+        id="hgReposSearchKeyword"
+        placeholder="Keyword"
+        ng-model="searchInput">
+      </div>
+      <button type="submit" class="btn btn-default" ng-click="onSearch(searchInput)">
+        Search
+      </button>
+    </form>
+  </div>
+  """
+  scope:
+    repo: '=repo'
+    log: '=log'
+    searchInput: '=searchInput'
+    onSearch: '=onSearch'
+
+
+
+
+m.directive 'hgReposPagination', ($filter) ->
+  restrict: "E"
+  replace: true
+  template: """
+  <div>
+    <pagination total-items="reposCount"
+    page="reposPage"
+    items-per-page="itemsPerPage"
+    max-size="10"
+    boundary-links="true"
+    rotate="false"
+    on-select-page="onSelectPage(page)">
+    </pagination>
+  </div>
+  """
+  scope:
+    repo: '=repo'
+    logPage: '=logPage'
+    logCount: '=logCount'
+    itemsPerPage: '=itemsPerPage'
+    onSelectPage: '=onSelectPage'
+
+
+
+
 m.directive 'hgStatus', ($filter) ->
 
   restrict: "E"

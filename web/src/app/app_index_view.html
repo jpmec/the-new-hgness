@@ -2,47 +2,63 @@
 <div class="row" ng-controller="HotRepoCtrl" ng-show="hotRepo.value">
   <div class="jumbotron col-sm-10">
     <h1>
-      <a ng-href="#/repo/{{hotRepo.value.projectName}}">
-        <i class="fa fa-folder fa-fw"></i> {{hotRepo.value.projectName}}
+
+      <a ng-href="#/repo/{{hotRepo.value.name}}">
+        <span class="fa-stack">
+          <i class="fa fa-heart-o fa-stack-2x"></i>
+          <i class="fa fa-fire fa-stack-1x"></i>
+        </span>
+        {{hotRepo.value.name}}
       </a>
     </h1>
     <hr/>
-    <p>
-      {{hotRepo.value.log.summary}}
-    </p>
-    <p>
-      <cite>
-        <a ng-href="#/diff/change/{{hotRepo.value.projectName}}/{{hotRepo.value.repo.log.changeset}}">
-          <span>{{prettyDate(hotRepo.value.log.date)}} </span><span>by {{prettyName(hotRepo.value.log.user)}}</span>
-        </a>
-      </cite>
-      <span class="pull-right">
-        <span class="label label-default">
-          <i class="fa fa-fw fa-code-fork"></i> {{hotRepo.value.summary.branch}}
-        </span>
-        <span ng-show="hotRepo.value.summary.commit && hotRepo.value.summary.commit != '(clean)'">
-          &nbsp;<span class="label label-info">{{hotRepo.value.summary.commit}}</span>&nbsp;
-        </span>
-
-        <span ng-show="hotRepo.value.summary.update && hotRepo.value.summary.update != '(current)'">
-          &nbsp;<span class="label label-info">{{hotRepo.value.summary.update}}</span>&nbsp;
-        </span>
-      </span>
-    </p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p>
+            {{hotRepo.value.log.summary}}
+          </p>
+          <p>
+            <cite>
+              <a ng-href="#/diff/change/{{hotRepo.value.name}}/{{hotRepo.value.repo.log.changeset}}">
+                <span>{{prettyDate(hotRepo.value.log.date)}} </span><span>by {{prettyName(hotRepo.value.log.user)}}</span>
+              </a>
+            </cite>
+          </p>
+        </div>
+        <div class="col-md-6 text-right">
+          <p>
+            <span class="label label-default">
+              <i class="fa fa-fw fa-code-fork"></i> {{hotRepo.value.summary.branch}}
+            </span>
+          </p>
+          <p>
+            <span ng-show="hotRepo.value.summary.commit && hotRepo.value.summary.commit != '(clean)'">
+              <span class="label label-info">{{hotRepo.value.summary.commit}}</span>
+            </span>
+          </p>
+          <p>
+            <span ng-show="hotRepo.value.summary.update && hotRepo.value.summary.update != '(current)'">
+              <span class="label label-info">{{hotRepo.value.summary.update}}</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="col-sm-2">
     <p>
-      <a class="btn btn-block btn-primary btn-lg" href="#/repo/logs/{{hotRepo.value.projectName}}">
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/logs/{{hotRepo.value.name}}">
         <i class="fa fa-fw fa-list"></i> Logs
       </a>
     </p>
     <p ng-show="hotRepo.value.log">
-      <a class="btn btn-block btn-primary btn-lg" href="#/repo/files/{{hotRepo.value.projectName}}">
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/files/{{hotRepo.value.name}}">
         <i class="fa fa-fw fa-files-o"></i> Files
       </a>
     </p>
     <p ng-show="hotRepo.value.log">
-      <a class="btn btn-block btn-primary btn-lg" href="#/repo/tags/{{hotRepo.value.projectName}}">
+      <a class="btn btn-block btn-primary btn-lg" href="#/repo/tags/{{hotRepo.value.name}}">
         <i class="fa fa-fw fa-tags"></i> Tags
       </a>
     </p>
@@ -56,15 +72,15 @@
       <div class="panel {{repoPanelStyle(repo)}}">
         <div class="panel-heading col-md-12">
           <h3 class="panel-title" ng-show="repo.log">
-            <a ng-href="#/repo/{{repo.projectName}}"
+            <a ng-href="#/repo/{{repo.name}}"
             tooltip="{{repo.summary.branch}} {{repo.summary.parent}}">
-              <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
+              <i class="fa fa-folder fa-fw"></i> {{repo.name}}
             </a>
           </h3>
 
           <h3 class="panel-title" ng-show="!repo.log">
-            <a ng-href="#/repo/{{repo.projectName}}">
-              <i class="fa fa-folder fa-fw"></i> {{repo.projectName}}
+            <a ng-href="#/repo/{{repo.name}}">
+              <i class="fa fa-folder fa-fw"></i> {{repo.name}}
             </a>
           </h3>
         </div>
@@ -72,7 +88,7 @@
         <div class="panel-body" ng-show="repo.log">
           <p class="text-right">
             <cite >
-              <a ng-href="#/diff/change/{{repo.projectName}}/{{repo.log.changeset}}">
+              <a ng-href="#/diff/change/{{repo.name}}/{{repo.log.changeset}}">
                 {{prettyDate(repo.log.date)}} by {{prettyName(repo.log.user)}}&nbsp;
               </a>
             </cite>
@@ -91,14 +107,14 @@
         </div>
         <div class="panel-footer">
           <span class="pull-right" ng-show="repo.log">
-            <a class="btn btn-default btn-xs" href="#/repo/logs/{{repo.projectName}}" tooltip="Logs">
+            <a class="btn btn-default btn-xs" href="#/repo/logs/{{repo.name}}" tooltip="Logs">
               <i class="fa fa-fw fa-list"></i>
             </a>
-            <a class="btn btn-default btn-xs" href="#/repo/files/{{repo.projectName}}" tooltip="Files">
+            <a class="btn btn-default btn-xs" href="#/repo/files/{{repo.name}}" tooltip="Files">
               <i class="fa fa-fw fa-files-o"></i>
             </a>
 
-            <a class="btn btn-default btn-xs" href="#/repo/tags/{{repo.projectName}}" tooltip="Tags">
+            <a class="btn btn-default btn-xs" href="#/repo/tags/{{repo.name}}" tooltip="Tags">
               <i class="fa fa-fw fa-tags"></i>
             </a>
           </span>
